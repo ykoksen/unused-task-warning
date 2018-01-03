@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="Lindhart.Analyser.MissingAwaitWarning.fa3689b8-640f-4d1d-bd77-528601f5e5e5" Version="1.0" Language="en-US" Publisher="morten"/>
-    <DisplayName>Lindhart.Analyser.MissingAwaitWarning</DisplayName>
-    <Description xml:space="preserve">This is a sample diagnostic extension for the .NET Compiler Platform ("Roslyn").</Description>
-  </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,)" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-  </Dependencies>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Lindhart.Analyser.MissingAwaitWarning" Path="|Lindhart.Analyser.MissingAwaitWarning|"/>
-    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Lindhart.Analyser.MissingAwaitWarning" Path="|Lindhart.Analyser.MissingAwaitWarning|"/>
-  </Assets>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
-    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,16.0)" DisplayName="Roslyn Language Services" />
-  </Prerequisites>
+    <Metadata>
+        <Identity Id="Lindhart.Analyser.MissingAwaitWarning.fa3689b8-640f-4d1d-bd77-528601f5e5e5" Version="1.0" Language="en-US" Publisher="Morten Hartlev Lindhart"/>
+        <DisplayName>Lindhart.Analyser.MissingAwaitWarning</DisplayName>
+        <Description xml:space="preserve"></Description>
+        <License>LICENSE.txt</License>
+        <Tags>Task</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,)" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Lindhart.Analyser.MissingAwaitWarning" Path="|Lindhart.Analyser.MissingAwaitWarning|"/>
+        <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Lindhart.Analyser.MissingAwaitWarning" Path="|Lindhart.Analyser.MissingAwaitWarning|"/>
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,16.0)" DisplayName="Roslyn Language Services" />
+    </Prerequisites>
 </PackageManifest>

@@ -4,11 +4,10 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using TestHelper;
-using Lindhart.Analyser.MissingAwaitWarning;
 
 namespace Lindhart.Analyser.MissingAwaitWarning.Test
 {
-    [TestClass]
+	[TestClass]
     public class UnitTest : CodeFixVerifier
     {
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lindhart.Analyser.MissingAwaitWarning.Test
+﻿namespace Lindhart.Analyser.MissingAwaitWarning.Test
 {
 	internal class TestData
 	{
