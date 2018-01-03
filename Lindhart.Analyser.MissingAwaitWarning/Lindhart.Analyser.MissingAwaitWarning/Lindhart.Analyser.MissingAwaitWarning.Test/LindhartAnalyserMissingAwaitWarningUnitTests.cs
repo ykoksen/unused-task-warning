@@ -12,71 +12,57 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
     public class UnitTest : CodeFixVerifier
     {
 
-        //No diagnostics expected to show up
-        [TestMethod]
-        public void TestMethod1()
-        {
-            var test = @"";
+		//No diagnostics expected to show up
+		[TestMethod]
+		public void VerifyCode_EmptyCode_ExpectNoWarnings()
+		{
+			var test2 = @"";
 
-            VerifyCSharpDiagnostic(test);
-        }
+			VerifyCSharpDiagnostic(test2);
+		}
 
-        //Diagnostic and CodeFix both triggered and checked for
-        [TestMethod]
-        public void TestMethod2()
-        {
-            var test = @"
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
+		//Diagnostic and CodeFix both triggered and checked for
+		[TestMethod]
+		public void VerifyCode_ProblematicCode_ExpectWarningForProblem()
+		{
 
-    namespace ConsoleApplication1
-    {
-        class TypeName
-        {   
-        }
-    }";
-            var expected = new DiagnosticResult
-            {
-                Id = "LindhartAnalyserMissingAwaitWarning",
-                Message = String.Format("Type name '{0}' contains lowercase letters", "TypeName"),
-                Severity = DiagnosticSeverity.Warning,
-                Locations =
-                    new[] {
-                            new DiagnosticResultLocation("Test0.cs", 11, 15)
-                        }
-            };
+			var expected = new[] { new DiagnosticResult
+						{
+								Id = "LindhartAnalyserMissingAwaitWarning",
+								Message = String.Format("The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited"),
+								Severity = DiagnosticSeverity.Warning,
+								Locations =
+										new[] {
+														new DiagnosticResultLocation("Test0.cs", 21, 13)
+												}
+						}, new DiagnosticResult
+								{
+										Id = "LindhartAnalyserMissingAwaitWarning",
+										Message = String.Format("The method 'System.Threading.Tasks.Task<int>.ConfigureAwait(bool)' returns a Task that was not awaited"),
+										Severity = DiagnosticSeverity.Warning,
+										Locations =
+												new[] {
+														new DiagnosticResultLocation("Test0.cs", 26, 13)
+												}
+								}, };
 
-            VerifyCSharpDiagnostic(test, expected);
+			VerifyCSharpDiagnostic(TestData.TestDiagnosis, expected);
+		}
 
-            var fixtest = @"
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
+		[TestMethod]
+		public void VerifyCodeFix_CodeFixApplied_CodeIsFixed()
+		{
+			VerifyCSharpFix(TestData.FixTestInput, TestData.FixTestOutput, allowNewCompilerDiagnostics: true);
+		}
 
-    namespace ConsoleApplication1
-    {
-        class TYPENAME
-        {   
-        }
-    }";
-            VerifyCSharpFix(test, fixtest);
-        }
+		protected override CodeFixProvider GetCSharpCodeFixProvider()
+		{
+			return new LindhartAnalyserMissingAwaitWarningCodeFixProvider();
+		}
 
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
-        {
-            return new LindhartAnalyserMissingAwaitWarningCodeFixProvider();
-        }
-
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-        {
-            return new LindhartAnalyserMissingAwaitWarningAnalyzer();
-        }
-    }
+		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+		{
+			return new LindhartAnalyserMissingAwaitWarningAnalyzer();
+		}
+	}
 }
