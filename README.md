@@ -1,5 +1,5 @@
 # unused-task-warning
-When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method. In this situation this analyser generates a warning.
+When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method (which will not trigger inbuilt warning CS4014). In this situation this analyser generates a warning.
 
 Can both be used as a Visual Studio extension or preferably as a project analyser available from NuGet.
 
