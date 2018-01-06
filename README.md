@@ -5,36 +5,37 @@ Can both be used as a Visual Studio extension or preferably as a project analyse
 
 Example:
 
-using System.Threading.Tasks;
+	using System.Threading.Tasks;
 
-namespace AsyncAwaitProblem
-{
-	public interface ICallee
+	namespace AsyncAwaitProblem
 	{
-		bool ProblemSolved { get; }
-		Task SolveProblemAsync();
-	}
-
-	public class Callee : ICallee
-	{
-		public bool ProblemSolved { get; set; }
-
-		public async Task SolveProblemAsync()
+		public interface ICallee
 		{
-			await Task.Delay(10);
-			ProblemSolved = true;
+			bool ProblemSolved { get; }
+			Task SolveProblemAsync();
+		}
+
+		public class Callee : ICallee
+		{
+			public bool ProblemSolved { get; set; }
+
+			public async Task SolveProblemAsync()
+			{
+				await Task.Delay(10);
+				ProblemSolved = true;
+			}
+		}
+		
+		public class Caller
+		{
+			public bool DoCall()
+			{
+				ICallee xxx = new Callee();
+	
+				// This analyser will give a warning at the following line
+				xxx.SolveProblemAsync(); // This is most likely an undesired fire and forget. 
+	
+				return xxx.ProblemSolved; // Will return false - we expected it to return true
+			}
 		}
 	}
-	public class Caller
-	{
-		public bool DoCall()
-		{
-			ICallee xxx = new Callee();
-
-			// This analyser will give a warning at the following line
-			xxx.SolveProblemAsync(); // This is most likely an undesired fire and forget. 
-
-			return xxx.ProblemSolved; // Will return false - we expected it to return true
-		}
-	}
-}
