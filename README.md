@@ -42,3 +42,6 @@ Example:
 
 
 Note that this analyser currently only checks for the types `Task` and `ConfiguredTaskAwaitable` (the type returned when using the `ConfigureAwait` method). If another ['Awaitable'](https://blogs.msdn.microsoft.com/pfxteam/2011/01/13/await-anything/) type is returned this analyser will not give the warning. This might be fixed in a future version.
+
+Available from NuGet here: https://www.nuget.org/packages/Lindhart.Analyser.MissingAwaitWarning/
+Available from Visual Studio marketplace here: https://marketplace.visualstudio.com/items?itemName=Lindhart.missingAwaitWarning#overview
