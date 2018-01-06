@@ -6,6 +6,7 @@
         <Description xml:space="preserve">When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method. In this situation this analyser generates a warning.When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method. In this situation this analyser generates a warning.
 
 Note that if you want to use this tool to ensure that this scenario never occurs it would be prefeable to download the corresponding NuGet package to the relevant projects. This will then be referenced as an analyser that will run on all builds (this extension merely shows the warning when a code file is open, not on build).</Description>
+        <MoreInfo>https://github.com/ykoksen/unused-task-warning</MoreInfo>
         <License>LICENSE.txt</License>
         <Tags>Task</Tags>
     </Metadata>
@@ -22,7 +23,7 @@ Note that if you want to use this tool to ensure that this scenario never occurs
         <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Lindhart.Analyser.MissingAwaitWarning" Path="|Lindhart.Analyser.MissingAwaitWarning|"/>
     </Assets>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[12.0,16.0)" DisplayName="Visual Studio core editor" />
-        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[12.0,16.0)" DisplayName="Roslyn Language Services" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26606.0,16.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,16.0)" DisplayName="Roslyn Language Services" />
     </Prerequisites>
 </PackageManifest>

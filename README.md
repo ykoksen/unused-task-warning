@@ -31,7 +31,8 @@ namespace AsyncAwaitProblem
 		{
 			ICallee xxx = new Callee();
 
-			xxx.SolveProblemAsync(); // This is most likely an undesired fire and forget.
+			// This analyser will give a warning at the following line
+			xxx.SolveProblemAsync(); // This is most likely an undesired fire and forget. 
 
 			return xxx.ProblemSolved; // Will return false - we expected it to return true
 		}

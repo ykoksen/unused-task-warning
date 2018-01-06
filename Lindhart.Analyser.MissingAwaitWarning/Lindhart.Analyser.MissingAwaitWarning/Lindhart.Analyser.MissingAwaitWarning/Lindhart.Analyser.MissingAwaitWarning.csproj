@@ -11,9 +11,9 @@
     <PackageVersion>1.0.0.0</PackageVersion>
     <Authors>Morten Hartlev Lindhart</Authors>
     <PackageLicenseUrl>https://github.com/ykoksen/unused-task-warning/blob/master/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/ykoksen/unused-task-warning</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
-    <RepositoryUrl>https://github.com/ykoksen/unused-task-warning</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ykoksen/unused-task-warning.git</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method. In this situation this analyser generates a warning.</Description>
     <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
@@ -21,7 +21,10 @@
     <PackageTags>Lindhart.Analyser.MissingAwaitWarning, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Company />
-    <Product>Possible missing await warning</Product>
+    <Product>Missing await warning</Product>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>LindhartKey.pfx</AssemblyOriginatorKeyFile>
+    <RepositoryType>git (GitHub)</RepositoryType>
   </PropertyGroup>
    
   <ItemGroup>
