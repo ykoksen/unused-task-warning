@@ -63,7 +63,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 		/// <remarks>This method should probably be rewritten so it doesn't merely compare the names, but instead the actual type.</remarks>
 		private static bool EqualsType(ITypeSymbol typeSymbol, params Type[] type)
 		{
-			var fullSymbolNameWithoutGeneric = $"{typeSymbol.ContainingNamespace.ToDisplayString()}.{typeSymbol.Name}";
+			// ContaningNamespace can be null, see https://github.com/dotnet/roslyn/blob/master/src/Compilers/Core/Portable/Symbols/ISymbol.cs#L76
+			var fullSymbolNameWithoutGeneric = typeSymbol.ContainingNamespace == null ? typeSymbol.Name : $"{typeSymbol.ContainingNamespace.ToDisplayString()}.{typeSymbol.Name}";
 			return type.Any(x => fullSymbolNameWithoutGeneric.Equals(x.FullName));
 		}
 	}
