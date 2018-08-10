@@ -25,6 +25,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>LindhartKey.pfx</AssemblyOriginatorKeyFile>
     <RepositoryType>git (GitHub)</RepositoryType>
+    <Version>1.0.1</Version>
   </PropertyGroup>
    
   <ItemGroup>
