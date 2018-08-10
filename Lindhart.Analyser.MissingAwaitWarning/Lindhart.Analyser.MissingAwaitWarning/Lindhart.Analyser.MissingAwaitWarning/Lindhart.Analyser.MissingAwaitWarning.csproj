@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/ykoksen/unused-task-warning.git</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method. In this situation this analyser generates a warning.</Description>
-    <PackageReleaseNotes>First version</PackageReleaseNotes>
+    <PackageReleaseNotes>Minor fix to be certain to avoid NullReferenceException</PackageReleaseNotes>
     <Copyright></Copyright>
     <PackageTags>Lindhart.Analyser.MissingAwaitWarning, analyzers, async, await, Task</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
