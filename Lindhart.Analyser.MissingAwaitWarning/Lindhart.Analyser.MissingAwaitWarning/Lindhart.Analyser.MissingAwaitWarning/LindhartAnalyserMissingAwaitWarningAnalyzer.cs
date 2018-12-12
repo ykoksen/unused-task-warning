@@ -56,7 +56,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 {
                     if (node.Parent is ExpressionStatementSyntax)
                     {
-                        // Only checks for the two most common awaitable types. In principle this should instead check all types that are awaitable
+                        // Check the method return type against all the known awaitable types.
                         if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                         {
                             var diagnostic = Diagnostic.Create(Rule, node.GetLocation(), methodSymbol.ToDisplayString());
