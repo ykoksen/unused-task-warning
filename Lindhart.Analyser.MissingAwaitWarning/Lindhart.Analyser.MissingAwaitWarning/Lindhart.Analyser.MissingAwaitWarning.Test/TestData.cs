@@ -34,6 +34,39 @@ namespace AsyncAwaitGames
         }
     }
 }";
+		
+        /// <summary>
+        /// File for testing diagnosis
+        /// </summary>
+        public const string TestDiagnosisValueTask = @"
+using System.Threading.Tasks;
+namespace AsyncAwaitGames
+{
+    // In my real case, that method just returns Task.
+    public interface ICallee { ValueTask<int> DoSomethingAsync(); }
+
+    public class Callee: ICallee
+    {
+        public async ValueTask<int> DoSomethingAsync() => await Task.FromResult(0); // Should not give a warning
+    }
+    public class Caller
+    {
+        public void DoCall()
+        {
+            ICallee xxx = new Callee();
+
+            // In my real case, the method just returns Task,
+            // so there is no type mismatch when assigning a result 
+            // either.
+            xxx.DoSomethingAsync(); // Should give a warning.
+
+            var task = xxx.DoSomethingAsync(); // Should not give a warning
+            xxx.DoSomethingAsync().Result; // Should not give a warning
+
+            xxx.DoSomethingAsync().ConfigureAwait(false); // Should give a warning
+        }
+    }
+}";
 
 		/// <summary>
 		/// Input that should be fixed
