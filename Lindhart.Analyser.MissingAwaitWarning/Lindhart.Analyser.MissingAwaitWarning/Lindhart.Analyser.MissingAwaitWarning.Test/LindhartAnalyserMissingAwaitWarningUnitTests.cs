@@ -35,6 +35,18 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                             new DiagnosticResultLocation("Test0.cs", 21, 13)
                         }
                 },
+                // Strict rule
+                new DiagnosticResult
+                {
+                    Id = "LindhartAnalyserMissingAwaitWarningStrict",
+                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Severity = DiagnosticSeverity.Warning,
+                    Locations = 
+                        new []
+                        {
+                            new DiagnosticResultLocation("Test0.cs", 23, 24), 
+                        }
+                },
                 new DiagnosticResult
                 {
                     Id = "LindhartAnalyserMissingAwaitWarning",
@@ -46,6 +58,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                             new DiagnosticResultLocation("Test0.cs", 26, 13)
                         }
                 },
+
             };
             
             VerifyCSharpDiagnostic(TestData.TestDiagnosis, expected);
@@ -65,6 +78,18 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                         new[]
                         {
                             new DiagnosticResultLocation("Test0.cs", 21, 13)
+                        }
+                },
+                // Strict rule
+                new DiagnosticResult
+                {
+                    Id = "LindhartAnalyserMissingAwaitWarningStrict",
+                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Severity = DiagnosticSeverity.Warning,
+                    Locations = 
+                        new []
+                        {
+                            new DiagnosticResultLocation("Test0.cs", 23, 24), 
                         }
                 },
                 new DiagnosticResult

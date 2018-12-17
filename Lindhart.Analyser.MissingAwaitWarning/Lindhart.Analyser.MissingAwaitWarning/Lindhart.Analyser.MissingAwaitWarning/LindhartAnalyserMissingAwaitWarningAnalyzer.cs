@@ -1,28 +1,31 @@
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Lindhart.Analyser.MissingAwaitWarning
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class LindhartAnalyserMissingAwaitWarningAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "LindhartAnalyserMissingAwaitWarning";
+        public const string StandardRuleId = "LindhartAnalyserMissingAwaitWarning";
+        public const string StrictRuleId = "LindhartAnalyserMissingAwaitWarningStrict";
 
         // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Localizing%20Analyzers.md for more on localization
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString StandardTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString StrictTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "UnintentionalUsage";
 
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
+        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Warning, false, Description);
 
         private static readonly Type[] AwaitableTypes = new[]
         {
@@ -30,17 +33,20 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(Task<>),
             typeof(ConfiguredTaskAwaitable),
             typeof(ConfiguredTaskAwaitable<>),
-            typeof(ValueTask),
+            //typeof(ValueTask), // can't make this to work
             typeof(ValueTask<>),
-            typeof(ConfiguredValueTaskAwaitable),
+            //typeof(ConfiguredValueTaskAwaitable), // can't make this to work
             typeof(ConfiguredValueTaskAwaitable<>)
         };
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule);
 
         public override void Initialize(AnalysisContext context)
         {
+            var x = EqualsType(null, null);
+
             context.RegisterSyntaxNodeAction(AnalyseSymbolNode, SyntaxKind.InvocationExpression);
+            //context.RegisterSyntaxNodeAction(AnalyseTaskAssignNode, SyntaxKind.LocalDeclarationStatement);
         }
 
         private void AnalyseSymbolNode(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -50,23 +56,73 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 var symbolInfo = syntaxNodeAnalysisContext
                     .SemanticModel
                     .GetSymbolInfo(node.Expression, syntaxNodeAnalysisContext.CancellationToken);
-                
+
                 if ((symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault())
                     is IMethodSymbol methodSymbol)
                 {
-                    if (node.Parent is ExpressionStatementSyntax)
+                    switch (node.Parent)
                     {
-                        // Check the method return type against all the known awaitable types.
-                        if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                        case ExpressionStatementSyntax _:
                         {
-                            var diagnostic = Diagnostic.Create(Rule, node.GetLocation(), methodSymbol.ToDisplayString());
+                            // Check the method return type against all the known awaitable types.
+                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                            {
+                                var diagnostic = Diagnostic.Create(StandardRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
-                            syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                            }
+
+                            break;
                         }
+                        case EqualsValueClauseSyntax _:
+                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                            {
+                                var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
+
+                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                            }
+
+                            break;
                     }
                 }
             }
         }
+
+/*        private void AnalyseTaskAssignNode(SyntaxNodeAnalysisContext context)
+        {
+            if (context.Node is LocalDeclarationStatementSyntax localDeclaration)
+            {
+                var declaratorSyntax = localDeclaration.Declaration
+                    .ChildNodes()
+                    .OfType<VariableDeclaratorSyntax>()
+                    .FirstOrDefault();
+
+                if (declaratorSyntax == null)
+                    return;
+
+                if (declaratorSyntax.Initializer.Value is InvocationExpressionSyntax node)
+                {
+                    var symbolInfo = context
+                        .SemanticModel
+                        .GetSymbolInfo(node.Expression, context.CancellationToken);
+
+                    if ((symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault())
+                        is IMethodSymbol methodSymbol)
+                    {
+                        if (node.Parent is EqualsValueClauseSyntax)
+                        {
+                            // Check the method return type against all the known awaitable types.
+                            if (EqualsType(methodSymbol.ReturnType, context.SemanticModel, AwaitableTypes))
+                            {
+                                var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
+
+                                context.ReportDiagnostic(diagnostic);
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
 
         /// <summary>
         /// Checks if the <paramref name="typeSymbol"/> is one of the types specified

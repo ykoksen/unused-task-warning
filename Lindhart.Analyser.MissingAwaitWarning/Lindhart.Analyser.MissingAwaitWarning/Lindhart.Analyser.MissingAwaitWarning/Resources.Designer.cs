@@ -82,9 +82,18 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         /// <summary>
         ///   Looks up a localized string similar to Possible missing await keyword.
         /// </summary>
-        internal static string AnalyzerTitle {
+        internal static string StandardRuleTitle {
             get {
-                return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("StandardRuleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possible unwanted Task returned from method.
+        /// </summary>
+        internal static string StrictRuleTitle {
+            get {
+                return ResourceManager.GetString("StrictRuleTitle", resourceCulture);
             }
         }
     }

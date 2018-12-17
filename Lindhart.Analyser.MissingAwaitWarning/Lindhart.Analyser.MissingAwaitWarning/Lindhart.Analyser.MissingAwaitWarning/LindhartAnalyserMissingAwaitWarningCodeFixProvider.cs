@@ -20,7 +20,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
     {
 		private const string Title = "Insert 'await' keyword";
 
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(LindhartAnalyserMissingAwaitWarningAnalyzer.DiagnosticId);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(LindhartAnalyserMissingAwaitWarningAnalyzer.StandardRuleId);
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
