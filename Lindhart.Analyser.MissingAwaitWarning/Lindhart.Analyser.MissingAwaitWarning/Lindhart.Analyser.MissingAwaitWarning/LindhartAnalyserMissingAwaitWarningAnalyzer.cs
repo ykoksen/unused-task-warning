@@ -43,10 +43,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
         public override void Initialize(AnalysisContext context)
         {
-            var x = EqualsType(null, null);
-
             context.RegisterSyntaxNodeAction(AnalyseSymbolNode, SyntaxKind.InvocationExpression);
-            //context.RegisterSyntaxNodeAction(AnalyseTaskAssignNode, SyntaxKind.LocalDeclarationStatement);
         }
 
         private void AnalyseSymbolNode(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -87,42 +84,6 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 }
             }
         }
-
-/*        private void AnalyseTaskAssignNode(SyntaxNodeAnalysisContext context)
-        {
-            if (context.Node is LocalDeclarationStatementSyntax localDeclaration)
-            {
-                var declaratorSyntax = localDeclaration.Declaration
-                    .ChildNodes()
-                    .OfType<VariableDeclaratorSyntax>()
-                    .FirstOrDefault();
-
-                if (declaratorSyntax == null)
-                    return;
-
-                if (declaratorSyntax.Initializer.Value is InvocationExpressionSyntax node)
-                {
-                    var symbolInfo = context
-                        .SemanticModel
-                        .GetSymbolInfo(node.Expression, context.CancellationToken);
-
-                    if ((symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault())
-                        is IMethodSymbol methodSymbol)
-                    {
-                        if (node.Parent is EqualsValueClauseSyntax)
-                        {
-                            // Check the method return type against all the known awaitable types.
-                            if (EqualsType(methodSymbol.ReturnType, context.SemanticModel, AwaitableTypes))
-                            {
-                                var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
-
-                                context.ReportDiagnostic(diagnostic);
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
 
         /// <summary>
         /// Checks if the <paramref name="typeSymbol"/> is one of the types specified
