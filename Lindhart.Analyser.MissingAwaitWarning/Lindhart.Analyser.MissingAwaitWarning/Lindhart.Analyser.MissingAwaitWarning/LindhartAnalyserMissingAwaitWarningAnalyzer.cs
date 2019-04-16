@@ -25,7 +25,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         private const string Category = "UnintentionalUsage";
 
         private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
-        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Warning, false, Description);
+        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description);
 
         private static readonly Type[] AwaitableTypes = new[]
         {
@@ -33,9 +33,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(Task<>),
             typeof(ConfiguredTaskAwaitable),
             typeof(ConfiguredTaskAwaitable<>),
-            //typeof(ValueTask), // can't make this to work
+            //typeof(ValueTask), // Type not available yet in .net standard
             typeof(ValueTask<>),
-            //typeof(ConfiguredValueTaskAwaitable), // can't make this to work
+            //typeof(ConfiguredValueTaskAwaitable), // Type not available yet in .net standard
             typeof(ConfiguredValueTaskAwaitable<>)
         };
 
@@ -59,8 +59,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 {
                     switch (node.Parent)
                     {
+                        // Checks if a task is not awaited when the task itself is not assigned to a variable.
                         case ExpressionStatementSyntax _:
-                        {
                             // Check the method return type against all the known awaitable types.
                             if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                             {
@@ -70,8 +70,10 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                             }
 
                             break;
-                        }
+
+                        // Checks if a task is not awaited when the task itself is assigned to a variable.
                         case EqualsValueClauseSyntax _:
+
                             if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                             {
                                 var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
