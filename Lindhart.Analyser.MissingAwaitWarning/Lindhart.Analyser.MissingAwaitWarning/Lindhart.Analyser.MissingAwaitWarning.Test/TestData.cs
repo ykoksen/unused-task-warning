@@ -27,7 +27,7 @@ namespace AsyncAwaitGames
             // either.
             xxx.DoSomethingAsync(); // Should give a warning.
 
-            var task = xxx.DoSomethingAsync(); // Should not give a warning
+            var task = xxx.DoSomethingAsync(); // Should give a warning when strict rule enabled
             xxx.DoSomethingAsync().Result; // Should not give a warning
 
             xxx.DoSomethingAsync().ConfigureAwait(false); // Should give a warning
@@ -60,7 +60,7 @@ namespace AsyncAwaitGames
             // either.
             xxx.DoSomethingAsync(); // Should give a warning.
 
-            var task = xxx.DoSomethingAsync(); // Should not give a warning
+            var task = xxx.DoSomethingAsync(); // Should give a warning when strict rule enabled
             xxx.DoSomethingAsync().Result; // Should not give a warning
 
             xxx.DoSomethingAsync().ConfigureAwait(false); // Should give a warning
@@ -128,11 +128,10 @@ namespace AsyncAwaitGames
             await xxx.DoSomethingAsync(); // Should be fixed
             #endregion
 
-            var task = xxx.DoSomethingAsync(); 
+            var task = await xxx.DoSomethingAsync(); 
             xxx.DoSomethingAsync().Result; 
         }
     }
 }";
-
 	}
 }

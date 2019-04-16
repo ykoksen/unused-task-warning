@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Lindhart.Analyser.MissingAwaitWarning;
 
 namespace TestHelper
 {
@@ -59,7 +60,20 @@ namespace TestHelper
             var diagnostics = new List<Diagnostic>();
             foreach (var project in projects)
             {
-                var compilationWithAnalyzers = project.GetCompilationAsync().Result.WithAnalyzers(ImmutableArray.Create(analyzer));
+                var compilation = project.GetCompilationAsync().Result;
+
+                // set options for specific diagnostics
+                var options = compilation.Options;
+                var specificDiagnosticOptions = options.SpecificDiagnosticOptions;
+
+                specificDiagnosticOptions = specificDiagnosticOptions.Add(LindhartAnalyserMissingAwaitWarningAnalyzer.StrictRuleId, ReportDiagnostic.Warn);
+
+                options = options.WithSpecificDiagnosticOptions(specificDiagnosticOptions);
+                compilation = compilation.WithOptions(options);
+
+                // add the analyzer to the configured compilation
+                var compilationWithAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
+
                 var diags = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
                 foreach (var diag in diags)
                 {

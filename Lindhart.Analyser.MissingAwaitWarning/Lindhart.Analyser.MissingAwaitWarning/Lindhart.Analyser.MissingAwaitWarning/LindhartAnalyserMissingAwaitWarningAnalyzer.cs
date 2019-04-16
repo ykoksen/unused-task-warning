@@ -1,28 +1,31 @@
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Lindhart.Analyser.MissingAwaitWarning
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class LindhartAnalyserMissingAwaitWarningAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "LindhartAnalyserMissingAwaitWarning";
+        public const string StandardRuleId = "LindhartAnalyserMissingAwaitWarning";
+        public const string StrictRuleId = "LindhartAnalyserMissingAwaitWarningStrict";
 
         // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Localizing%20Analyzers.md for more on localization
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString StandardTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString StrictTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "UnintentionalUsage";
 
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
+        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description);
 
         private static readonly Type[] AwaitableTypes = new[]
         {
@@ -30,13 +33,13 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(Task<>),
             typeof(ConfiguredTaskAwaitable),
             typeof(ConfiguredTaskAwaitable<>),
-            typeof(ValueTask),
+            //typeof(ValueTask), // Type not available yet in .net standard
             typeof(ValueTask<>),
-            typeof(ConfiguredValueTaskAwaitable),
+            //typeof(ConfiguredValueTaskAwaitable), // Type not available yet in .net standard
             typeof(ConfiguredValueTaskAwaitable<>)
         };
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -50,19 +53,35 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 var symbolInfo = syntaxNodeAnalysisContext
                     .SemanticModel
                     .GetSymbolInfo(node.Expression, syntaxNodeAnalysisContext.CancellationToken);
-                
+
                 if ((symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault())
                     is IMethodSymbol methodSymbol)
                 {
-                    if (node.Parent is ExpressionStatementSyntax)
+                    switch (node.Parent)
                     {
-                        // Check the method return type against all the known awaitable types.
-                        if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
-                        {
-                            var diagnostic = Diagnostic.Create(Rule, node.GetLocation(), methodSymbol.ToDisplayString());
+                        // Checks if a task is not awaited when the task itself is not assigned to a variable.
+                        case ExpressionStatementSyntax _:
+                            // Check the method return type against all the known awaitable types.
+                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                            {
+                                var diagnostic = Diagnostic.Create(StandardRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
-                            syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
-                        }
+                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                            }
+
+                            break;
+
+                        // Checks if a task is not awaited when the task itself is assigned to a variable.
+                        case EqualsValueClauseSyntax _:
+
+                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                            {
+                                var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
+
+                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                            }
+
+                            break;
                     }
                 }
             }

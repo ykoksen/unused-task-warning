@@ -125,8 +125,12 @@
     <value>The method '{0}' returns a Task that was not awaited</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
-  <data name="AnalyzerTitle" xml:space="preserve">
+  <data name="StandardRuleTitle" xml:space="preserve">
     <value>Possible missing await keyword</value>
     <comment>The title of the diagnostic.</comment>
+  </data>
+  <data name="StrictRuleTitle" xml:space="preserve">
+    <value>Possible unwanted Task returned from method</value>
+    <comment>The title of the more strict diagnostic.</comment>
   </data>
 </root>
