@@ -25,7 +25,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         private const string Category = "UnintentionalUsage";
 
         private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
-        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Warning, false, Description);
+        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description);
 
         private static readonly Type[] AwaitableTypes = new[]
         {
@@ -33,9 +33,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(Task<>),
             typeof(ConfiguredTaskAwaitable),
             typeof(ConfiguredTaskAwaitable<>),
-            //typeof(ValueTask), // can't make this to work
+            //typeof(ValueTask), // Type not available yet in .net standard
             typeof(ValueTask<>),
-            //typeof(ConfiguredValueTaskAwaitable), // can't make this to work
+            //typeof(ConfiguredValueTaskAwaitable), // Type not available yet in .net standard
             typeof(ConfiguredValueTaskAwaitable<>)
         };
 
