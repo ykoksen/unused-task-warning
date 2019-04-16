@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Lindhart.Analyser.MissingAwaitWarning.fa3689b8-640f-4d1d-bd77-528601f5e5e5" Version="1.2.1" Language="en-US" Publisher="Morten Hartlev Lindhart, Alessandro Losi"/>
+        <Identity Id="Lindhart.Analyser.MissingAwaitWarning.fa3689b8-640f-4d1d-bd77-528601f5e5e5" Version="1.3.0" Language="en-US" Publisher="Morten Hartlev Lindhart, Alessandro Losi"/>
         <DisplayName>Missing await warning</DisplayName>
         <Description xml:space="preserve">Gives a warning when an asynchronous method might be inadvertently used as a fire and forget method (also in cases where the normal CS4014 warning is not).Gives a warning </Description>
         <MoreInfo>https://github.com/ykoksen/unused-task-warning</MoreInfo>
@@ -21,7 +21,7 @@
         <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Lindhart.Analyser.MissingAwaitWarning" Path="|Lindhart.Analyser.MissingAwaitWarning|"/>
     </Assets>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26606.0,16.0)" DisplayName="Visual Studio core editor" />
-        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,16.0)" DisplayName="Roslyn Language Services" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,17.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,17.0)" DisplayName="Roslyn Language Services" />
     </Prerequisites>
 </PackageManifest>
