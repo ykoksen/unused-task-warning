@@ -133,6 +133,10 @@
     <value>Possible unawaited Task</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
+  <data name="StrictAnalyzerMessageFormat" xml:space="preserve">
+    <value>The async method '{0}' returns a Task that is not awaited. This could be the expected behaviour, depending of your context.</value>
+    <comment>The format-able message the diagnostic displays for the stricter async rule.</comment>
+  </data>
   <data name="StrictRuleTitle" xml:space="preserve">
     <value>Possibile unawaited Task</value>
     <comment>The title of the more strict diagnostic.</comment>

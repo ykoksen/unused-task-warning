@@ -21,13 +21,13 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         private static readonly LocalizableString StandardTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString StrictTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MessageFormatStrict = new LocalizableResourceString(nameof(Resources.StrictAnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString AlternateDescription = new LocalizableResourceString(nameof(Resources.StrictRuleDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "UnintentionalUsage";
 
         private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
-        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, StrictMessageFormat, Category, DiagnosticSeverity.Warning, true, AlternateDescription);
-
+        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormatStrict, Category, DiagnosticSeverity.Warning, true, AlternateDescription);
 
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule);

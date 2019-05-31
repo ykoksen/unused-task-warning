@@ -98,6 +98,15 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The async method &apos;{0}&apos; returns a Task that is not awaited. This could be the expected behaviour, depending of your context..
+        /// </summary>
+        internal static string StrictAnalyzerMessageFormat {
+            get {
+                return ResourceManager.GetString("StrictAnalyzerMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Possibile unawaited Task.
         /// </summary>
         internal static string StrictRuleTitle {
