@@ -20,7 +20,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -62,7 +62,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unawaited task might result in an unwanted fire and forget.
+        ///   Looks up a localized string similar to Unawaited Task will result in an unwanted fire and forget.
         /// </summary>
         internal static string AnalyzerDescription {
             get {
@@ -89,7 +89,16 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Possible unwanted Task returned from method.
+        ///   Looks up a localized string similar to Possible unawaited Task.
+        /// </summary>
+        internal static string StrictRuleDescription {
+            get {
+                return ResourceManager.GetString("StrictRuleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possibile unawaited Task.
         /// </summary>
         internal static string StrictRuleTitle {
             get {

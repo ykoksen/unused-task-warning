@@ -22,28 +22,33 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         private static readonly LocalizableString StrictTitle = new LocalizableResourceString(nameof(Resources.StandardRuleTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString AlternateDescription = new LocalizableResourceString(nameof(Resources.StrictRuleDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "UnintentionalUsage";
 
         private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
-        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description);
+        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, StrictMessageFormat, Category, DiagnosticSeverity.Warning, true, AlternateDescription);
 
-        private static readonly Type[] AwaitableTypes = new[]
-        {
-            typeof(Task),
-            typeof(Task<>),
-            typeof(ConfiguredTaskAwaitable),
-            typeof(ConfiguredTaskAwaitable<>),
-            //typeof(ValueTask), // Type not available yet in .net standard
-            typeof(ValueTask<>),
-            //typeof(ConfiguredValueTaskAwaitable), // Type not available yet in .net standard
-            typeof(ConfiguredValueTaskAwaitable<>)
-        };
+
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule);
 
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyseSymbolNode, SyntaxKind.InvocationExpression);
+            context.RegisterCodeBlockAction(AnalyzeBlockNode);
+        }
+
+        private void AnalyzeBlockNode(CodeBlockAnalysisContext context)
+        {
+            var walker = new UnawaitedTaskWalker(context);
+            walker.Analyze(context.CodeBlock);
+
+            foreach (var symbol in walker.UnawaitedTasks)
+            {
+                var diagnostic = Diagnostic.Create(StrictRule, symbol.Locations.First(), symbol.ToDisplayString());
+
+                context.ReportDiagnostic(diagnostic);
+            }
         }
 
         private void AnalyseSymbolNode(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -62,21 +67,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                         // Checks if a task is not awaited when the task itself is not assigned to a variable.
                         case ExpressionStatementSyntax _:
                             // Check the method return type against all the known awaitable types.
-                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                            if (Common.EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, Common.AwaitableTypes))
                             {
                                 var diagnostic = Diagnostic.Create(StandardRule, node.GetLocation(), methodSymbol.ToDisplayString());
-
-                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
-                            }
-
-                            break;
-
-                        // Checks if a task is not awaited when the task itself is assigned to a variable.
-                        case EqualsValueClauseSyntax _:
-
-                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
-                            {
-                                var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
                                 syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
                             }
@@ -85,27 +78,6 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Checks if the <paramref name="typeSymbol"/> is one of the types specified
-        /// </summary>
-        /// <param name="typeSymbol"></param>
-        /// <param name="semanticModel">Semantic Model of the current context</param>
-        /// <param name="types">List of parameters that should match the symbol's type</param>
-        /// <returns></returns>
-        private static bool EqualsType(ITypeSymbol typeSymbol, SemanticModel semanticModel, params Type[] types)
-        {
-            var namedTypeSymbols = types.Select(x => semanticModel.Compilation.GetTypeByMetadataName(x.FullName));
-
-            var namedSymbol = typeSymbol as INamedTypeSymbol;
-            if (namedSymbol == null)
-                return false;
-
-            if (namedSymbol.IsGenericType)
-                return namedTypeSymbols.Any(t => namedSymbol.ConstructedFrom.Equals(t));
-            else
-                return namedTypeSymbols.Any(t => typeSymbol.Equals(t));
         }
     }
 }

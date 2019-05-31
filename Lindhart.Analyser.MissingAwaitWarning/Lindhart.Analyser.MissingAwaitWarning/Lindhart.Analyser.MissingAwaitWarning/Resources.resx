@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnalyzerDescription" xml:space="preserve">
-    <value>Unawaited task might result in an unwanted fire and forget</value>
+    <value>Unawaited Task will result in an unwanted fire and forget</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
   <data name="AnalyzerMessageFormat" xml:space="preserve">
@@ -129,8 +129,12 @@
     <value>Possible missing await keyword</value>
     <comment>The title of the diagnostic.</comment>
   </data>
+  <data name="StrictRuleDescription" xml:space="preserve">
+    <value>Possible unawaited Task</value>
+    <comment>An optional longer localizable description of the diagnostic.</comment>
+  </data>
   <data name="StrictRuleTitle" xml:space="preserve">
-    <value>Possible unwanted Task returned from method</value>
+    <value>Possibile unawaited Task</value>
     <comment>The title of the more strict diagnostic.</comment>
   </data>
 </root>
