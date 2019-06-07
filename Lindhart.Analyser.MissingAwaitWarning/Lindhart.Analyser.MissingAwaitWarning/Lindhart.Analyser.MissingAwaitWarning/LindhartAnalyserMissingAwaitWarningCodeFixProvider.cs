@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
@@ -10,8 +8,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Rename;
-using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace Lindhart.Analyser.MissingAwaitWarning
 {
@@ -77,8 +74,12 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             // Remove comments
             var newDeclaration = declaration.ReplaceToken(firstToken, firstToken.WithLeadingTrivia(SyntaxTriviaList.Empty));
 
+            ExpressionSyntax parentesized = SyntaxFactory
+                .ParenthesizedExpression(newDeclaration)
+                .WithAdditionalAnnotations(Simplifier.Annotation);
+
             // Create 'await' expression before the problem
-            AwaitExpressionSyntax awaiter = SyntaxFactory.AwaitExpression(newDeclaration);
+            AwaitExpressionSyntax awaiter = SyntaxFactory.AwaitExpression(parentesized);
 
             // Replace the node with the new node - and insert trivia on the new node
             var rootNode = await document.GetSyntaxRootAsync(cancellationToken);
