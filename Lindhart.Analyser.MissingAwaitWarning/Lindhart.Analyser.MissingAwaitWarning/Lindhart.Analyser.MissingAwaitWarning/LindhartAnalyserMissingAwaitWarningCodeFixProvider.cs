@@ -33,7 +33,32 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
             // Find the type declaration identified by the diagnostic.
-            var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<InvocationExpressionSyntax>().First();
+            ExpressionSyntax declaration;
+            switch (diagnostic.Id)
+            {
+                case LindhartAnalyserMissingAwaitWarningAnalyzer.StandardRuleId:
+                    declaration = root.FindToken(diagnosticSpan.Start)
+                                      .Parent
+                                      .AncestorsAndSelf()
+                                      .OfType<InvocationExpressionSyntax>()
+                                      .First();
+                    break;
+                case LindhartAnalyserMissingAwaitWarningAnalyzer.StrictRuleId:
+                    declaration = root.FindToken(diagnosticSpan.Start)
+                                      .Parent
+                                      .AncestorsAndSelf()
+                                      .OfType<VariableDeclarationSyntax>()
+                                      .First()
+                                      .DescendantNodes()
+                                      .OfType<EqualsValueClauseSyntax>()
+                                      .First()
+                                      .DescendantNodes()
+                                      .OfType<ExpressionSyntax>()
+                                      .First();
+                    break;
+                default:
+                    return;
+            }
 
             // Register a code action that will invoke the fix.
             context.RegisterCodeFix(
@@ -44,7 +69,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                     diagnostic);
         }
 
-        private async Task<Document> InsertAwaitKeyword(Document document, InvocationExpressionSyntax declaration, CancellationToken cancellationToken)
+        private async Task<Document> InsertAwaitKeyword(Document document, ExpressionSyntax declaration, CancellationToken cancellationToken)
         {
             // Get comments (comments and stuff)
             var firstToken = declaration.GetFirstToken();

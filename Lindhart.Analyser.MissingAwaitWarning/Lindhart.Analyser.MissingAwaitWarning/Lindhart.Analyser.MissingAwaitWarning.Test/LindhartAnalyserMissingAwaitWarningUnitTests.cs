@@ -39,12 +39,12 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 new DiagnosticResult
                 {
                     Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Message = "The task 'task' don't seems to be awaited. This could be the expected behaviour, depending of your context.",
                     Severity = DiagnosticSeverity.Warning,
                     Locations = 
                         new []
                         {
-                            new DiagnosticResultLocation("Test0.cs", 23, 24), 
+                            new DiagnosticResultLocation("Test0.cs", 23, 17), 
                         }
                 },
                 new DiagnosticResult
@@ -84,12 +84,12 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 new DiagnosticResult
                 {
                     Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Message = "The task 'task' don't seems to be awaited. This could be the expected behaviour, depending of your context.",
                     Severity = DiagnosticSeverity.Warning,
                     Locations = 
                         new []
                         {
-                            new DiagnosticResultLocation("Test0.cs", 23, 24), 
+                            new DiagnosticResultLocation("Test0.cs", 23, 17), 
                         }
                 },
                 new DiagnosticResult
