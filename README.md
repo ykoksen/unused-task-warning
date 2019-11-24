@@ -46,3 +46,5 @@ Note that this analyser currently only checks for current known awaitable types 
 Available from NuGet here: https://www.nuget.org/packages/Lindhart.Analyser.MissingAwaitWarning/
 
 Available from Visual Studio marketplace here: https://marketplace.visualstudio.com/items?itemName=Lindhart.missingAwaitWarning#overview
+
+For information on how to use analyzers check here: https://docs.microsoft.com/en-us/visualstudio/code-quality/roslyn-analyzers-overview?view=vs-2019
