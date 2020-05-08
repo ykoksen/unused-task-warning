@@ -10,7 +10,7 @@
     <PackageId>Lindhart.Analyser.MissingAwaitWarning</PackageId>
     <PackageVersion>1.2.1-beta</PackageVersion>
     <Authors>Morten Hartlev Lindhart, Alessandro Losi</Authors>
-    <PackageLicenseUrl>https://github.com/ykoksen/unused-task-warning/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ykoksen/unused-task-warning</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/ykoksen/unused-task-warning.git</RepositoryUrl>
@@ -26,6 +26,8 @@
     <AssemblyOriginatorKeyFile>LindhartKey.pfx</AssemblyOriginatorKeyFile>
     <RepositoryType>git (GitHub)</RepositoryType>
     <Version>1.2.1-beta</Version>
+    <PackageLicenseExpression />
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
    
   <ItemGroup>
@@ -42,6 +44,10 @@
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="..\Lindhart.Analyser.MissingAwaitWarning.Vsix\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
