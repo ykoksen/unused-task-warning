@@ -8,7 +8,7 @@
   
   <PropertyGroup>
     <PackageId>Lindhart.Analyser.MissingAwaitWarning</PackageId>
-    <PackageVersion>1.2.0</PackageVersion>
+    <PackageVersion>1.2.1-beta</PackageVersion>
     <Authors>Morten Hartlev Lindhart, Alessandro Losi</Authors>
     <PackageLicenseUrl>https://github.com/ykoksen/unused-task-warning/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ykoksen/unused-task-warning</PackageProjectUrl>
@@ -25,12 +25,12 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>LindhartKey.pfx</AssemblyOriginatorKeyFile>
     <RepositoryType>git (GitHub)</RepositoryType>
-    <Version>1.2.0</Version>
+    <Version>1.2.1-beta</Version>
   </PropertyGroup>
    
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.6.1" PrivateAssets="all" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.3.0" PrivateAssets="all" />
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
