@@ -109,6 +109,27 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
         }
 
         [TestMethod]
+        public void VerifyCode_ProblematicCode_ExpectWarningForProblem_ReturnTask()
+        {
+            var expected = new[]
+            {
+                new DiagnosticResult
+                {
+                    Id = "LindhartAnalyserMissingAwaitWarningStrict",
+                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Severity = DiagnosticSeverity.Warning,
+                    Locations =
+                        new[]
+                        {
+                            new DiagnosticResultLocation("Test0.cs", 18, 20)
+                        }
+                }
+            };
+
+            VerifyCSharpDiagnostic(TestData.TestDiagnosisReturnTask, expected);
+        }
+
+        [TestMethod]
         public void VerifyCodeFix_CodeFixApplied_CodeIsFixed()
         {
             VerifyCSharpFix(TestData.FixTestInput, TestData.FixTestOutput, allowNewCompilerDiagnostics: true);

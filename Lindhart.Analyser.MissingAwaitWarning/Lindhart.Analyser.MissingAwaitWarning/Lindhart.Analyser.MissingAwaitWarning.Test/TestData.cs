@@ -68,6 +68,31 @@ namespace AsyncAwaitGames
     }
 }";
 
+        /// <summary>
+        /// File for testing diagnosis
+        /// </summary>
+        public const string TestDiagnosisReturnTask = @"
+using System.Threading.Tasks;
+namespace AsyncAwaitGames
+{
+    // In my real case, that method just returns Task.
+    public interface ICallee { Task<int> DoSomethingAsync(); }
+
+    public class Callee : ICallee
+    {
+        public async Task<int> DoSomethingAsync() => await Task.FromResult(0); // Should not give a warning
+    }
+    public class Caller
+    {
+        public Task<int> DoCall()
+        {
+            ICallee xxx = new Callee();
+
+            return xxx.DoSomethingAsync(); // Should give a warning
+        }
+    }
+}";
+
 		/// <summary>
 		/// Input that should be fixed
 		/// </summary>

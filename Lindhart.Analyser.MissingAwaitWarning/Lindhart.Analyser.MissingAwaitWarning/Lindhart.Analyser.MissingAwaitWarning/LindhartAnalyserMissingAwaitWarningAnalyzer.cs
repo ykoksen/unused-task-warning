@@ -26,6 +26,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
         private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
         private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description);
+        private static readonly DiagnosticDescriptor ReturnRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
 
         private static readonly Type[] AwaitableTypes = new[]
         {
@@ -39,7 +40,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(ConfiguredValueTaskAwaitable<>)
         };
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule, ReturnRule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -77,6 +78,18 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                             if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                             {
                                 var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
+
+                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                            }
+
+                            break;
+
+                        // Checks if a task is not awaited when the task itself is returned from the calling method.
+                        case ReturnStatementSyntax _:
+                            // Check the method return type against all the known awaitable types.
+                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+                            {
+                                var diagnostic = Diagnostic.Create(ReturnRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
                                 syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
                             }
