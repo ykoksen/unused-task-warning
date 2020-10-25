@@ -22,7 +22,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Company />
     <Product>Missing await warning</Product>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>LindhartKey.pfx</AssemblyOriginatorKeyFile>
     <RepositoryType>git (GitHub)</RepositoryType>
     <Version>1.2.1</Version>
