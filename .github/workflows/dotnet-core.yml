@@ -25,4 +25,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkg
-        path: ./Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/bin/**/*.nupkg
+        path: ./Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/bin/**/Release/*.nupkg
