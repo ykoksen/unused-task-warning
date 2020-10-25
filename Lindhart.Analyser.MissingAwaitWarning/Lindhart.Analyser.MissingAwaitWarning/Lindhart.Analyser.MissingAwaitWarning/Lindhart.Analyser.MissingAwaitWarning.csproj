@@ -10,7 +10,7 @@
     <PackageId>Lindhart.Analyser.MissingAwaitWarning</PackageId>
     <PackageVersion>1.2.1</PackageVersion>
     <Authors>Morten Hartlev Lindhart, Alessandro Losi</Authors>
-    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/ykoksen/unused-task-warning/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ykoksen/unused-task-warning</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/ykoksen/unused-task-warning.git</RepositoryUrl>
