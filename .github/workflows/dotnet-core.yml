@@ -20,9 +20,13 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal **/*.sln
     - name: Create package
-      run: dotnet pack -v normal -c Release --no-restore --include-source -p:PackageVersion=$GITHUB_RUN_ID Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning.csproj
+      run: | 
+        arrTag=(${GITHUB_REF//\// })
+        VERSION="${arrTag[2]}"
+        VERSION="${VERSION//v}"
+        dotnet pack -v normal -c Release --no-restore -p:PackageVersion=$VERSION Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning.csproj
     - name: Upload package as Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: nupkg
-        path: ./Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/bin/**/Release/*.nupkg
+        name: NuGetPackage
+        path: ./Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/bin/Release/*.nupkg
