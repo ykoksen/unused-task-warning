@@ -29,7 +29,9 @@
    
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.6.1" PrivateAssets="all" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.3.0" PrivateAssets="all" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
