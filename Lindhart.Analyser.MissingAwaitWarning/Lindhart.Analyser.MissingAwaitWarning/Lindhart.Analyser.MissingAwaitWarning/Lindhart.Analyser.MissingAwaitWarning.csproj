@@ -8,7 +8,7 @@
   
   <PropertyGroup>
     <PackageId>Lindhart.Analyser.MissingAwaitWarning</PackageId>
-    <Authors>Morten Hartlev Lindhart, Alessandro Losi, Arthur Liberman</Authors>
+    <Authors>Morten Hartlev Lindhart, Alessandro Losi, Joris Vergeer</Authors>
     <PackageProjectUrl>https://github.com/ykoksen/unused-task-warning</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/ykoksen/unused-task-warning.git</RepositoryUrl>
