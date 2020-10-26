@@ -27,16 +27,16 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor(StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description);
         private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor(StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description);
 
-        private static readonly Type[] AwaitableTypes = new[]
+        private static readonly string[] AwaitableTypes = new[]
         {
-            typeof(Task),
-            typeof(Task<>),
-            typeof(ConfiguredTaskAwaitable),
-            typeof(ConfiguredTaskAwaitable<>),
-            //typeof(ValueTask), // Type not available yet in .net standard
-            typeof(ValueTask<>),
-            //typeof(ConfiguredValueTaskAwaitable), // Type not available yet in .net standard
-            typeof(ConfiguredValueTaskAwaitable<>)
+            typeof(Task).FullName,
+            typeof(Task<>).FullName,
+            typeof(ConfiguredTaskAwaitable).FullName,
+            typeof(ConfiguredTaskAwaitable<>).FullName,
+            "System.Threading.Tasks.ValueTask", // Type not available in .net standard 1.3
+            typeof(ValueTask<>).FullName,
+            "System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable", // Type not available in .net standard
+            typeof(ConfiguredValueTaskAwaitable<>).FullName
         };
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StandardRule, StrictRule);
@@ -94,9 +94,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         /// <param name="semanticModel">Semantic Model of the current context</param>
         /// <param name="types">List of parameters that should match the symbol's type</param>
         /// <returns></returns>
-        private static bool EqualsType(ITypeSymbol typeSymbol, SemanticModel semanticModel, params Type[] types)
+        private static bool EqualsType(ITypeSymbol typeSymbol, SemanticModel semanticModel, params string[] types)
         {
-            var namedTypeSymbols = types.Select(x => semanticModel.Compilation.GetTypeByMetadataName(x.FullName));
+            var namedTypeSymbols = types.Select(x => semanticModel.Compilation.GetTypeByMetadataName(x));
 
             var namedSymbol = typeSymbol as INamedTypeSymbol;
             if (namedSymbol == null)
