@@ -20,7 +20,7 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal **/*.sln
     - name: Create package
-      run: dotnet pack -p:PackageVersion=2.0.0-beta2 -v normal -c Release --no-restore Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning.csproj
+      run: dotnet pack -p:PackageVersion=2.0.0 -v normal -c Release --no-restore Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning/Lindhart.Analyser.MissingAwaitWarning.csproj
     - name: Upload package as Artifact
       uses: actions/upload-artifact@v2
       with:
