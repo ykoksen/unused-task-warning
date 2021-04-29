@@ -1,11 +1,11 @@
 ﻿namespace Lindhart.Analyser.MissingAwaitWarning.Test
 {
-	internal class TestData
-	{
-		/// <summary>
-		/// File for testing diagnosis
-		/// </summary>
-		public const string TestDiagnosis = @"
+    internal class TestData
+    {
+        /// <summary>
+        /// File for testing diagnosis
+        /// </summary>
+        public const string TestDiagnosis = @"
 using System.Threading.Tasks;
 namespace AsyncAwaitGames
 {
@@ -20,7 +20,12 @@ namespace AsyncAwaitGames
     {
         public void DoCall()
         {
+            // Arrange
             ICallee xxx = new Callee();
+
+            var LocalFunc() => xxx.DoSomethingAsync();
+
+            // Act
 
             // In my real case, the method just returns Task,
             // so there is no type mismatch when assigning a result 
@@ -31,10 +36,12 @@ namespace AsyncAwaitGames
             xxx.DoSomethingAsync().Result; // Should not give a warning
 
             xxx.DoSomethingAsync().ConfigureAwait(false); // Should give a warning
+
+            LocalFunc(); // Should give a warning
         }
     }
 }";
-		
+
         /// <summary>
         /// File for testing diagnosis
         /// </summary>
@@ -68,10 +75,10 @@ namespace AsyncAwaitGames
     }
 }";
 
-		/// <summary>
-		/// Input that should be fixed
-		/// </summary>
-		public const string FixTestInput = @"
+        /// <summary>
+        /// Input that should be fixed
+        /// </summary>
+        public const string FixTestInput = @"
 using System.Threading.Tasks;
 namespace AsyncAwaitGames
 {
@@ -101,10 +108,10 @@ namespace AsyncAwaitGames
     }
 }";
 
-		/// <summary>
-		/// This is what we expect and hope the code will be fixed to
-		/// </summary>
-		public const string FixTestOutput = @"
+        /// <summary>
+        /// This is what we expect and hope the code will be fixed to
+        /// </summary>
+        public const string FixTestOutput = @"
 using System.Threading.Tasks;
 namespace AsyncAwaitGames
 {
@@ -133,5 +140,5 @@ namespace AsyncAwaitGames
         }
     }
 }";
-	}
+    }
 }
