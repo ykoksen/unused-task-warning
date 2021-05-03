@@ -58,6 +58,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 {
                     switch (node.Parent)
                     {
+                        // Checks if a task is not awaited in lambdas.
+                        case AnonymousFunctionExpressionSyntax _:
+                        case ArrowExpressionClauseSyntax _:
                         // Checks if a task is not awaited when the task itself is not assigned to a variable.
                         case ExpressionStatementSyntax _:
                             // Check the method return type against all the known awaitable types.
@@ -75,17 +78,6 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                             if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                             {
                                 var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
-
-                                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
-                            }
-
-                            break;
-
-                        // Checks if a task is not awaited in lambdas.
-                        case ArrowExpressionClauseSyntax _:
-                            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
-                            {
-                                var diagnostic = Diagnostic.Create(StandardRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
                                 syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
                             }
@@ -113,8 +105,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
             if (namedSymbol.IsGenericType)
                 return namedTypeSymbols.Any(t => namedSymbol.ConstructedFrom.Equals(t));
-            else
-                return namedTypeSymbols.Any(t => typeSymbol.Equals(t));
+            
+            return namedTypeSymbols.Any(t => typeSymbol.Equals(t));
         }
     }
 }

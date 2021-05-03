@@ -7,38 +7,42 @@
         /// </summary>
         public const string TestDiagnosis = @"
 using System.Threading.Tasks;
+
 namespace AsyncAwaitGames
 {
-    // In my real case, that method just returns Task.
     public interface ICallee { Task<int> DoSomethingAsync(); }
 
-    public class Callee: ICallee
+    public class Callee : ICallee
     {
-        public async Task<int> DoSomethingAsync() => await Task.FromResult(0); // Should not give a warning
+        public async Task<int> DoSomethingAsync() => await Task.FromResult(0);
     }
+
     public class Caller
     {
-        public void DoCall()
+        public async Task DoCall()
         {
-            // Arrange
             ICallee xxx = new Callee();
 
-            var LocalFunc() => xxx.DoSomethingAsync();
+            // Should not give a warning
+            await xxx.DoSomethingAsync();
+            xxx.DoSomethingAsync().Result;
+            xxx.DoSomethingAsync().Wait();
 
-            // Act
+            // Should give a warning when strict rule enabled
+            var task = xxx.DoSomethingAsync();
+            var LocalFunc() => { var _ = xxx.DoSomethingAsync(); };
+            Action action = () => { var _ = xxx.DoSomethingAsync(); };
+            Parallel.For(0, 5, i => { var _ = xxx.DoSomethingAsync(); });
 
-            // In my real case, the method just returns Task,
-            // so there is no type mismatch when assigning a result 
-            // either.
-            xxx.DoSomethingAsync(); // Should give a warning.
-
-            var task = xxx.DoSomethingAsync(); // Should give a warning when strict rule enabled
-            xxx.DoSomethingAsync().Result; // Should not give a warning
-
-            xxx.DoSomethingAsync().ConfigureAwait(false); // Should give a warning
-
-            LocalFunc(); // Should give a warning
-        }
+            // Should always give a warning
+            xxx.DoSomethingAsync();
+            xxx.DoSomethingAsync().ConfigureAwait(false);
+            var LocalFunc1() => xxx.DoSomethingAsync();
+            var LocalFunc2() => { xxx.DoSomethingAsync(); };
+            Action action1 = () => xxx.DoSomethingAsync();
+            Action action2 = () => { xxx.DoSomethingAsync(); };
+            Parallel.For(0, 5, i => xxx.DoSomethingAsync());
+            Parallel.For(0, 5, i => { xxx.DoSomethingAsync(); });
     }
 }";
 
@@ -102,8 +106,10 @@ namespace AsyncAwaitGames
             xxx.DoSomethingAsync(); // Should be fixed
             #endregion
 
-            var task = xxx.DoSomethingAsync(); 
-            xxx.DoSomethingAsync().Result; 
+            var task = xxx.DoSomethingAsync();
+            xxx.DoSomethingAsync().Result;
+
+            Action action1 = () => xxx.DoSomethingAsync();
         }
     }
 }";
@@ -135,8 +141,10 @@ namespace AsyncAwaitGames
             await xxx.DoSomethingAsync(); // Should be fixed
             #endregion
 
-            var task = await xxx.DoSomethingAsync(); 
-            xxx.DoSomethingAsync().Result; 
+            var task = await xxx.DoSomethingAsync();
+            xxx.DoSomethingAsync().Result;
+
+            Action action1 = async () => await xxx.DoSomethingAsync();
         }
     }
 }";
