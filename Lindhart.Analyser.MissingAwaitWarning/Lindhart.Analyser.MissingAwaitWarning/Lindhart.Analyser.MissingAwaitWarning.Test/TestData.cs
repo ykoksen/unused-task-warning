@@ -108,8 +108,6 @@ namespace AsyncAwaitGames
 
             var task = xxx.DoSomethingAsync();
             xxx.DoSomethingAsync().Result;
-
-            Action action1 = () => xxx.DoSomethingAsync();
         }
     }
 }";
@@ -143,8 +141,6 @@ namespace AsyncAwaitGames
 
             var task = await xxx.DoSomethingAsync();
             xxx.DoSomethingAsync().Result;
-
-            Action action1 = async () => await xxx.DoSomethingAsync();
         }
     }
 }";
