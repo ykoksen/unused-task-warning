@@ -6,6 +6,7 @@
         /// File for testing diagnosis
         /// </summary>
         public const string TestDiagnosis = @"
+using System;
 using System.Threading.Tasks;
 
 namespace AsyncAwaitGames
@@ -19,30 +20,30 @@ namespace AsyncAwaitGames
 
     public class Caller
     {
-        public async Task DoCall()
+        public void DoCall()
         {
             ICallee xxx = new Callee();
 
             // Should not give a warning
-            await xxx.DoSomethingAsync();
-            xxx.DoSomethingAsync().Result;
+            var _ = xxx.DoSomethingAsync().Result;
             xxx.DoSomethingAsync().Wait();
 
             // Should give a warning when strict rule enabled
             var task = xxx.DoSomethingAsync();
-            var LocalFunc() => { var _ = xxx.DoSomethingAsync(); };
+            void LocalFunc() { var _ = xxx.DoSomethingAsync(); };
             Action action = () => { var _ = xxx.DoSomethingAsync(); };
             Parallel.For(0, 5, i => { var _ = xxx.DoSomethingAsync(); });
 
             // Should always give a warning
             xxx.DoSomethingAsync();
             xxx.DoSomethingAsync().ConfigureAwait(false);
-            var LocalFunc1() => xxx.DoSomethingAsync();
-            var LocalFunc2() => { xxx.DoSomethingAsync(); };
+            void LocalFunc1() => xxx.DoSomethingAsync();
+            void LocalFunc2() { xxx.DoSomethingAsync(); };
             Action action1 = () => xxx.DoSomethingAsync();
             Action action2 = () => { xxx.DoSomethingAsync(); };
             Parallel.For(0, 5, i => xxx.DoSomethingAsync());
             Parallel.For(0, 5, i => { xxx.DoSomethingAsync(); });
+        }
     }
 }";
 

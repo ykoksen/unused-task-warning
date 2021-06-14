@@ -44,7 +44,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                     Locations =
                         new []
                         {
-                            new DiagnosticResultLocation("Test0.cs", 26, 42),
+                            new DiagnosticResultLocation("Test0.cs", 26, 40),
                         }
                 },
                 new DiagnosticResult
@@ -100,7 +100,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                     Locations =
                         new[]
                         {
-                            new DiagnosticResultLocation("Test0.cs", 33, 33)
+                            new DiagnosticResultLocation("Test0.cs", 33, 34)
                         }
                 },
                 new DiagnosticResult
@@ -111,7 +111,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                     Locations =
                         new[]
                         {
-                            new DiagnosticResultLocation("Test0.cs", 34, 35)
+                            new DiagnosticResultLocation("Test0.cs", 34, 33)
                         }
                 },
                 new DiagnosticResult
