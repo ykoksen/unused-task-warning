@@ -27,6 +27,7 @@ namespace AsyncAwaitGames
             // Should not give a warning
             var _ = xxx.DoSomethingAsync().Result;
             xxx.DoSomethingAsync().Wait();
+            Func<Task> __ = async () => await Task.Delay(100);
 
             // Should give a warning when strict rule enabled
             var task = xxx.DoSomethingAsync();
