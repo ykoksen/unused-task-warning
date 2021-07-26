@@ -58,9 +58,6 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 {
                     switch (node.Parent)
                     {
-                        // Checks if a task is not awaited in lambdas.
-                        case AnonymousFunctionExpressionSyntax _:
-                        case ArrowExpressionClauseSyntax _:
                         // Checks if a task is not awaited when the task itself is not assigned to a variable.
                         case ExpressionStatementSyntax _:
                             // Check the method return type against all the known awaitable types.
@@ -73,6 +70,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
                             break;
 
+                        // Checks if a task is not awaited in lambdas.
+                        case AnonymousFunctionExpressionSyntax _:
+                        case ArrowExpressionClauseSyntax _:
                         // Checks if a task is not awaited when the task itself is assigned to a variable.
                         case EqualsValueClauseSyntax _:
                             if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))

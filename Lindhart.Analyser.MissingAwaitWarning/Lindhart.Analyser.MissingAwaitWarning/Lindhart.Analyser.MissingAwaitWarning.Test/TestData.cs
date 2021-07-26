@@ -25,24 +25,25 @@ namespace AsyncAwaitGames
             ICallee xxx = new Callee();
 
             // Should not give a warning
-            var _ = xxx.DoSomethingAsync().Result;
+            var __ = xxx.DoSomethingAsync().Result;
             xxx.DoSomethingAsync().Wait();
-            Func<Task> __ = async () => await Task.Delay(100);
+            Func<Task> ___ = async () => await Task.Delay(100);
 
             // Should give a warning when strict rule enabled
             var task = xxx.DoSomethingAsync();
-            void LocalFunc() { var _ = xxx.DoSomethingAsync(); };
-            Action action = () => { var _ = xxx.DoSomethingAsync(); };
+            void LocalFunc1() { var _ = xxx.DoSomethingAsync(); };
+            void LocalFunc2() => xxx.DoSomethingAsync();
+            Action action1 = () => { var _ = xxx.DoSomethingAsync(); };
+            Action action2 = () => xxx.DoSomethingAsync();
+            Func<Task> func = () => xxx.DoSomethingAsync();
             Parallel.For(0, 5, i => { var _ = xxx.DoSomethingAsync(); });
+            Parallel.For(0, 5, i => xxx.DoSomethingAsync());
 
             // Should always give a warning
             xxx.DoSomethingAsync();
             xxx.DoSomethingAsync().ConfigureAwait(false);
-            void LocalFunc1() => xxx.DoSomethingAsync();
-            void LocalFunc2() { xxx.DoSomethingAsync(); };
-            Action action1 = () => xxx.DoSomethingAsync();
-            Action action2 = () => { xxx.DoSomethingAsync(); };
-            Parallel.For(0, 5, i => xxx.DoSomethingAsync());
+            void LocalFunc() { xxx.DoSomethingAsync(); };
+            Action action = () => { xxx.DoSomethingAsync(); };
             Parallel.For(0, 5, i => { xxx.DoSomethingAsync(); });
         }
     }
