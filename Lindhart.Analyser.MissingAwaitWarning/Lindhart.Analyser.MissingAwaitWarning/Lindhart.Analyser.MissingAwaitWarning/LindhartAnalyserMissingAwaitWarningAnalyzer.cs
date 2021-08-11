@@ -70,9 +70,11 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
                             break;
 
+                        // Checks if a task is not awaited in lambdas.
+                        case AnonymousFunctionExpressionSyntax _:
+                        case ArrowExpressionClauseSyntax _:
                         // Checks if a task is not awaited when the task itself is assigned to a variable.
                         case EqualsValueClauseSyntax _:
-
                             if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                             {
                                 var diagnostic = Diagnostic.Create(StrictRule, node.GetLocation(), methodSymbol.ToDisplayString());
@@ -103,8 +105,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
             if (namedSymbol.IsGenericType)
                 return namedTypeSymbols.Any(t => namedSymbol.ConstructedFrom.Equals(t));
-            else
-                return namedTypeSymbols.Any(t => typeSymbol.Equals(t));
+            
+            return namedTypeSymbols.Any(t => typeSymbol.Equals(t));
         }
     }
 }
