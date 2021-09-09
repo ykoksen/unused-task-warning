@@ -1,11 +1,11 @@
 ﻿namespace Lindhart.Analyser.MissingAwaitWarning.Test
 {
-	internal class TestData
-	{
-		/// <summary>
-		/// File for testing diagnosis
-		/// </summary>
-		public const string TestDiagnosis = @"
+    internal class TestData
+    {
+        /// <summary>
+        /// File for testing diagnosis
+        /// </summary>
+        public const string TestDiagnosis = @"
 using System;
 using System.Threading.Tasks;
 
@@ -89,10 +89,10 @@ namespace AsyncAwaitGames
     }
 }";
 
-		/// <summary>
-		/// File for testing diagnosis
-		/// </summary>
-		public const string TestDiagnosisValueTask = @"
+        /// <summary>
+        /// File for testing diagnosis
+        /// </summary>
+        public const string TestDiagnosisValueTask = @"
 using System.Threading.Tasks;
 namespace AsyncAwaitGames
 {
@@ -118,14 +118,55 @@ namespace AsyncAwaitGames
             xxx.DoSomethingAsync().Result; // Should not give a warning
 
             xxx.DoSomethingAsync().ConfigureAwait(false); // Should give a warning
+                                                                                                                                  
+                                                                                                                                  
+            // Null Conditional                                                                                                   
+            xxx?.DoSomethingAsync(); // Should give a warning                                                                     
+                                                                                                                                  
+            var taskNullable = xxx?.DoSomethingAsync(); // Should give a warning when strict rule enabled                         
+                                                                                                                                  
+            xxx?.DoSomethingAsync().Result; // Should not give a warning                                                          
+                                                                                                                                  
+            xxx?.DoSomethingAsync().ConfigureAwait(false); // Should give a warning                                               
+                                                                                                                                  
+            var holder = new CallerHolder();                                                                                      
+                                                                                                                                  
+                                                                                                                                  
+            // Null Conditional second level                                                                                      
+            holder?.Callee?.DoSomethingAsync(); // Should give a warning                                                          
+            holder?.Callee.DoSomethingAsync(); // Should give a warning                                                           
+                                                                                                                                  
+            var taskNullable2 = holder?.Callee?.DoSomethingAsync(); // Should give a warning when strict rule enabled             
+            var taskNullable3 = holder?.Callee.DoSomethingAsync(); // Should give a warning when strict rule enabled              
+                                                                                                                                  
+            holder?.Callee?.DoSomethingAsync().Result; // Should not give a warning                                               
+            holder?.Callee.DoSomethingAsync().Result; // Should not give a warning                                                
+                                                                                                                                  
+            holder?.Callee?.DoSomethingAsync().ConfigureAwait(false); // Should give a warning                                    
+            holder?.Callee.DoSomethingAsync().ConfigureAwait(false); // Should give a warning                                     
+                                                                                                                                  
+                                                                                                                                  
+                                                                                                                                  
+            // Awaited                                                                                                            
+            await xxx.DoSomethingAsync(); // Should not give a warning                                                            
+            await xxx?.DoSomethingAsync(); // Should not give a warning                                                           
+            await holder?.Callee?.DoSomethingAsync(); // Should not give a warning                                                
+            await holder?.Callee.DoSomethingAsync(); // Should not give a warning 
+            await ( xxx?.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning           
+            await ( holder?.Callee?.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning
+            await ( holder?.Callee.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning
         }
+    }
+    public class CallerHolder                                                                                                              
+    {                                                                                                                                      
+        public ICallee Callee {get;set;}    
     }
 }";
 
-		/// <summary>
-		/// Input that should be fixed
-		/// </summary>
-		public const string FixTestInput = @"
+        /// <summary>
+        /// Input that should be fixed
+        /// </summary>
+        public const string FixTestInput = @"
 using System.Threading.Tasks;
 namespace AsyncAwaitGames
 {
@@ -155,10 +196,10 @@ namespace AsyncAwaitGames
     }
 }";
 
-		/// <summary>
-		/// This is what we expect and hope the code will be fixed to
-		/// </summary>
-		public const string FixTestOutput = @"
+        /// <summary>
+        /// This is what we expect and hope the code will be fixed to
+        /// </summary>
+        public const string FixTestOutput = @"
 using System.Threading.Tasks;
 namespace AsyncAwaitGames
 {
@@ -187,5 +228,5 @@ namespace AsyncAwaitGames
         }
     }
 }";
-	}
+    }
 }
