@@ -117,20 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AnalyzerDescription" xml:space="preserve">
+  <data name="UnawaitedTaskDescription" xml:space="preserve">
     <value>Unawaited task might result in an unwanted fire and forget</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
-  <data name="AnalyzerMessageFormat" xml:space="preserve">
+  <data name="UnawaitedTaskMessageFormat" xml:space="preserve">
     <value>The method '{0}' returns a Task that was not awaited</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
-  <data name="StandardRuleTitle" xml:space="preserve">
+  <data name="UnawaitedTaskRuleTitle" xml:space="preserve">
     <value>Possible missing await keyword</value>
     <comment>The title of the diagnostic.</comment>
   </data>
-  <data name="StrictRuleTitle" xml:space="preserve">
-    <value>Possible unwanted Task returned from method</value>
+  <data name="PossibleUnawaitedVaraibleRuleTitle" xml:space="preserve">
+    <value>Possible unwanted Task returned from method.</value>
     <comment>The title of the more strict diagnostic.</comment>
+  </data>
+  <data name="PossibleUnawaitedVariableDescription" xml:space="preserve">
+    <value>If the variable is not awaited this might result in an unwanted fire and forget</value>
+  </data>
+  <data name="PossibleUnawaitedVariableMessageFormat" xml:space="preserve">
+    <value>The method '{0}' returns a Task that was inserted into a variable. This variable might not be awaited.</value>
   </data>
 </root>

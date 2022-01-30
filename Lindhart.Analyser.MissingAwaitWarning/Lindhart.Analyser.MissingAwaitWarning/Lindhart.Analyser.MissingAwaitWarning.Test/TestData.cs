@@ -80,7 +80,7 @@ namespace AsyncAwaitGames
             await holder?.Callee.DoSomethingAsync(); // Should not give a warning 
             await ( xxx?.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning           
             await ( holder?.Callee?.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning
-            await ( holder?.Callee.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning             
+            await ( holder?.Callee.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning                        
         }
     }
     public class CallerHolder                                                                                                              

@@ -10,7 +10,6 @@
 
 namespace Lindhart.Analyser.MissingAwaitWarning {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,7 +19,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -40,7 +39,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Lindhart.Analyser.MissingAwaitWarning.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Lindhart.Analyser.MissingAwaitWarning.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,38 +61,56 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Possible unwanted Task returned from method..
+        /// </summary>
+        internal static string PossibleUnawaitedVaraibleRuleTitle {
+            get {
+                return ResourceManager.GetString("PossibleUnawaitedVaraibleRuleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If the variable is not awaited this might result in an unwanted fire and forget.
+        /// </summary>
+        internal static string PossibleUnawaitedVariableDescription {
+            get {
+                return ResourceManager.GetString("PossibleUnawaitedVariableDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The method &apos;{0}&apos; returns a Task that was inserted into a variable. This variable might not be awaited..
+        /// </summary>
+        internal static string PossibleUnawaitedVariableMessageFormat {
+            get {
+                return ResourceManager.GetString("PossibleUnawaitedVariableMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unawaited task might result in an unwanted fire and forget.
         /// </summary>
-        internal static string AnalyzerDescription {
+        internal static string UnawaitedTaskDescription {
             get {
-                return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("UnawaitedTaskDescription", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The method &apos;{0}&apos; returns a Task that was not awaited.
         /// </summary>
-        internal static string AnalyzerMessageFormat {
+        internal static string UnawaitedTaskMessageFormat {
             get {
-                return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("UnawaitedTaskMessageFormat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Possible missing await keyword.
         /// </summary>
-        internal static string StandardRuleTitle {
+        internal static string UnawaitedTaskRuleTitle {
             get {
-                return ResourceManager.GetString("StandardRuleTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Possible unwanted Task returned from method.
-        /// </summary>
-        internal static string StrictRuleTitle {
-            get {
-                return ResourceManager.GetString("StrictRuleTitle", resourceCulture);
+                return ResourceManager.GetString("UnawaitedTaskRuleTitle", resourceCulture);
             }
         }
     }

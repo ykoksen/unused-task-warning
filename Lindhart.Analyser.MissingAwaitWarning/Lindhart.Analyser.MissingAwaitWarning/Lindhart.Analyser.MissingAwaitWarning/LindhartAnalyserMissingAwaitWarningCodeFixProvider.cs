@@ -21,8 +21,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         private const string Title = "Insert 'await' keyword";
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
-            LindhartAnalyserMissingAwaitWarningAnalyzer.StandardRuleId,
-            LindhartAnalyserMissingAwaitWarningAnalyzer.StrictRuleId // This use case is already covered by a standard roslyn code fix. Should we still add our for coherence?
+            LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+            LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId // This use case is already covered by a standard roslyn code fix. Should we still add our for coherence?
             );
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
