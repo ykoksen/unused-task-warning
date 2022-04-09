@@ -12,19 +12,22 @@ namespace Lindhart.Analyser.MissingAwaitWarning
     [DiagnosticAnalyzer( LanguageNames.CSharp )]
     public class LindhartAnalyserMissingAwaitWarningAnalyzer : DiagnosticAnalyzer
     {
-        public const string StandardRuleId = "LindhartAnalyserMissingAwaitWarning";
-        public const string StrictRuleId = "LindhartAnalyserMissingAwaitWarningStrict";
+        public const string UnawaitedTaskRuleId = "LindhartAnalyserMissingAwaitWarning";
+        public const string PossibleUnawaitedTaskVariableRuleId = "LindhartAnalyserMissingAwaitWarningVariable";
 
         // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Localizing%20Analyzers.md for more on localization
-        private static readonly LocalizableString StandardTitle = new LocalizableResourceString( nameof( Resources.StandardRuleTitle ), Resources.ResourceManager, typeof( Resources ) );
-        private static readonly LocalizableString StrictTitle = new LocalizableResourceString( nameof( Resources.StandardRuleTitle ), Resources.ResourceManager, typeof( Resources ) );
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString( nameof( Resources.AnalyzerMessageFormat ), Resources.ResourceManager, typeof( Resources ) );
-        private static readonly LocalizableString Description = new LocalizableResourceString( nameof( Resources.AnalyzerDescription ), Resources.ResourceManager, typeof( Resources ) );
+        public static readonly LocalizableString UnawaitedTaskTitle = new LocalizableResourceString(nameof(Resources.UnawaitedTaskRuleTitle), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString PossibleUnawaitedVariableTitle = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVaraibleRuleTitle), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString UnawaitedTaskMessageFormat = new LocalizableResourceString(nameof(Resources.UnawaitedTaskMessageFormat), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString UnawaitedTaskDescription = new LocalizableResourceString(nameof(Resources.UnawaitedTaskDescription), Resources.ResourceManager, typeof(Resources));
+
+        public static readonly LocalizableString PossibleUnawaitedVariableMessageFormat = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableMessageFormat), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString PossibleUnawaitedVariableDescription = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "UnintentionalUsage";
 
-        private static readonly DiagnosticDescriptor StandardRule = new DiagnosticDescriptor( StandardRuleId, StandardTitle, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description );
-        private static readonly DiagnosticDescriptor StrictRule = new DiagnosticDescriptor( StrictRuleId, StrictTitle, MessageFormat, Category, DiagnosticSeverity.Hidden, false, Description );
+        private static readonly DiagnosticDescriptor UnawaitedTaskRule = new DiagnosticDescriptor(UnawaitedTaskRuleId, UnawaitedTaskTitle, UnawaitedTaskMessageFormat, Category, DiagnosticSeverity.Warning, true, UnawaitedTaskDescription);
+        private static readonly DiagnosticDescriptor PossibleUnawaitedVariableRule = new DiagnosticDescriptor(PossibleUnawaitedTaskVariableRuleId, PossibleUnawaitedVariableTitle, PossibleUnawaitedVariableMessageFormat, Category, DiagnosticSeverity.Hidden, false, PossibleUnawaitedVariableDescription);
 
         private static readonly string[] AwaitableTypes = new[]
         {
@@ -38,7 +41,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(ConfiguredValueTaskAwaitable<>).FullName
         };
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create( StandardRule, StrictRule );
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(UnawaitedTaskRule, PossibleUnawaitedVariableRule);
 
         public override void Initialize( AnalysisContext context )
         {
@@ -70,7 +73,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                     // Check the method return type against all the known awaitable types.
                     if ( EqualsType( methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes ) )
                     {
-                        var diagnostic = Diagnostic.Create( StandardRule, node.GetLocation(), methodSymbol.ToDisplayString() );
+                        var diagnostic = Diagnostic.Create(UnawaitedTaskRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
                         syntaxNodeAnalysisContext.ReportDiagnostic( diagnostic );
                     }
@@ -86,7 +89,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
                     if ( EqualsType( methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes ) )
                     {
-                        var diagnostic = Diagnostic.Create( StrictRule, node.GetLocation(), methodSymbol.ToDisplayString() );
+                        var diagnostic = Diagnostic.Create( PossibleUnawaitedVariableRule, node.GetLocation(), methodSymbol.ToDisplayString() );
 
                         syntaxNodeAnalysisContext.ReportDiagnostic( diagnostic );
                     }
