@@ -66,7 +66,7 @@ namespace TestHelper
                 var options = compilation.Options;
                 var specificDiagnosticOptions = options.SpecificDiagnosticOptions;
 
-                specificDiagnosticOptions = specificDiagnosticOptions.Add(LindhartAnalyserMissingAwaitWarningAnalyzer.StrictRuleId, ReportDiagnostic.Warn);
+                specificDiagnosticOptions = specificDiagnosticOptions.Add(LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId, ReportDiagnostic.Warn);
 
                 options = options.WithSpecificDiagnosticOptions(specificDiagnosticOptions);
                 compilation = compilation.WithOptions(options);
