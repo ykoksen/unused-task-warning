@@ -35,7 +35,7 @@ namespace AsyncAwaitGames
             void LocalFunc2() => xxx.DoSomethingAsync();
             Action action1 = () => { var _ = xxx.DoSomethingAsync(); };
             Action action2 = () => xxx.DoSomethingAsync();
-            Func<Task> func = () => xxx.DoSomethingAsync();
+            Func<Task> func = () => xxx.DoSomethingAsync(); // No more
             Parallel.For(0, 5, i => { var _ = xxx.DoSomethingAsync(); });
             Parallel.For(0, 5, i => xxx.DoSomethingAsync());
 
@@ -69,9 +69,7 @@ namespace AsyncAwaitGames
             holder?.Callee.DoSomethingAsync().Result; // Should not give a warning                                                
                                                                                                                                   
             holder?.Callee?.DoSomethingAsync().ConfigureAwait(false); // Should give a warning                                    
-            holder?.Callee.DoSomethingAsync().ConfigureAwait(false); // Should give a warning                                     
-                                                                                                                                  
-                                                                                                                                  
+            holder?.Callee.DoSomethingAsync().ConfigureAwait(false); // Should give a warning                                                                                                                                      
                                                                                                                                   
             // Awaited                                                                                                            
             await xxx.DoSomethingAsync(); // Should not give a warning                                                            
@@ -80,7 +78,11 @@ namespace AsyncAwaitGames
             await holder?.Callee.DoSomethingAsync(); // Should not give a warning 
             await ( xxx?.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning           
             await ( holder?.Callee?.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning
-            await ( holder?.Callee.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning                        
+            await ( holder?.Callee.DoSomethingAsync() ?? Task.FromResult(0) ); // Should not give a warning
+
+            // Functions that should not give warning
+            async Task LocalFunc3() => await xxx.DoSomethingAsync();
+            // Task LocalFunc3() => xxx.DoSomethingAsync();
         }
     }
     public class CallerHolder                                                                                                              
@@ -88,6 +90,38 @@ namespace AsyncAwaitGames
         public ICallee Callee {get;set;}                                                                                                   
     }
 }";
+
+        public const string TestLocalFunctions = @"
+using System;
+using System.Threading.Tasks;
+
+namespace AsyncAwaitGames
+    {
+        public interface ICallee { Task<int> DoSomethingAsync(); }
+
+        public class Callee : ICallee
+        {
+            public async Task<int> DoSomethingAsync() => await Task.FromResult(0);
+        }
+
+        public class Caller
+        {
+            public async Task DoCall()
+            {
+                ICallee xxx = new Callee();
+                
+                // Functions that should not give warning
+                DoSomething(() => xxx.DoSomethingAsync());
+                // Func<Func<Task>> func = () => () => xxx.DoSomethingAsync(); // No more
+            }
+
+            public void DoSomething(Func<Task> action){}
+        }
+        public class CallerHolder
+        {
+            public ICallee Callee { get; set; }
+        }
+    }";
 
         /// <summary>
         /// File for testing diagnosis

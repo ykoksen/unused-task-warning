@@ -139,4 +139,22 @@
   <data name="PossibleUnawaitedVariableMessageFormat" xml:space="preserve">
     <value>The method '{0}' returns a Task that was inserted into a variable. This variable might not be awaited.</value>
   </data>
+  <data name="UnawaitedAnonymousFunctionDescription" xml:space="preserve">
+    <value>Unawaited task might result in an unwanted fire and forget</value>
+  </data>
+  <data name="UnawaitedAnonymousFunctionMessageFormat" xml:space="preserve">
+    <value>The anonymous function '{0}' returns a Task that cannot be awaited since the </value>
+  </data>
+  <data name="UnawaitedAnonymousFunctionTitle" xml:space="preserve">
+    <value>Possible unwanted Task returned from function</value>
+  </data>
+  <data name="UnawaitedLambdaFunctionDescription" xml:space="preserve">
+    <value>Unawaited task might result in an unwanted fire and forget</value>
+  </data>
+  <data name="UnawaitedLambdaFunctionMessageFormat" xml:space="preserve">
+    <value>The lambda expression '{0}' returns a Task that cannot be awaited since the delegate does not return a Task</value>
+  </data>
+  <data name="UnawaitedLambdaFunctionTitle" xml:space="preserve">
+    <value>Possible unwanted Task returned from lambda expression.</value>
+  </data>
 </root>

@@ -18,6 +18,12 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
             VerifyCSharpDiagnostic( test2 );
         }
 
+        [TestMethod]
+        public void VerifyCode_LocalFunction_ExpectNoWarning()
+        {
+            VerifyCSharpDiagnostic(TestData.TestLocalFunctions);
+        }
+
         //Diagnostic and CodeFix both triggered and checked for
         [TestMethod]
         public void VerifyCode_ProblematicCode_ExpectWarningForProblem()

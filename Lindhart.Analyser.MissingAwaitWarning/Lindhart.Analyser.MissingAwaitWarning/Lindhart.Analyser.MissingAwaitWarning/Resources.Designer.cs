@@ -90,6 +90,60 @@ namespace Lindhart.Analyser.MissingAwaitWarning {
         /// <summary>
         ///   Looks up a localized string similar to Unawaited task might result in an unwanted fire and forget.
         /// </summary>
+        internal static string UnawaitedAnonymousFunctionDescription {
+            get {
+                return ResourceManager.GetString("UnawaitedAnonymousFunctionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The anonymous function &apos;{0}&apos; returns a Task that cannot be awaited since the .
+        /// </summary>
+        internal static string UnawaitedAnonymousFunctionMessageFormat {
+            get {
+                return ResourceManager.GetString("UnawaitedAnonymousFunctionMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possible unwanted Task returned from function.
+        /// </summary>
+        internal static string UnawaitedAnonymousFunctionTitle {
+            get {
+                return ResourceManager.GetString("UnawaitedAnonymousFunctionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unawaited task might result in an unwanted fire and forget.
+        /// </summary>
+        internal static string UnawaitedLambdaFunctionDescription {
+            get {
+                return ResourceManager.GetString("UnawaitedLambdaFunctionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The lambda expression &apos;{0}&apos; returns a Task that cannot be awaited since the delegate does not return a Task.
+        /// </summary>
+        internal static string UnawaitedLambdaFunctionMessageFormat {
+            get {
+                return ResourceManager.GetString("UnawaitedLambdaFunctionMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Possible unwanted Task returned from lambda expression..
+        /// </summary>
+        internal static string UnawaitedLambdaFunctionTitle {
+            get {
+                return ResourceManager.GetString("UnawaitedLambdaFunctionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unawaited task might result in an unwanted fire and forget.
+        /// </summary>
         internal static string UnawaitedTaskDescription {
             get {
                 return ResourceManager.GetString("UnawaitedTaskDescription", resourceCulture);

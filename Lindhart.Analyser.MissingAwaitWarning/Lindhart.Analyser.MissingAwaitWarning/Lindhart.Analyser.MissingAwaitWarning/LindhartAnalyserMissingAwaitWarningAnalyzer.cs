@@ -15,20 +15,36 @@ namespace Lindhart.Analyser.MissingAwaitWarning
     {
         public const string UnawaitedTaskRuleId = "LindhartAnalyserMissingAwaitWarning";
         public const string PossibleUnawaitedTaskVariableRuleId = "LindhartAnalyserMissingAwaitWarningVariable";
+        public const string UnawaitedAnonymousFunctionRuleId = "LindhartAnalyserMissingAwaitWarningVariable";
+        public const string UnawaitedLambdaFunctionRuleId = "LindhartAnalyserMissingAwaitWarningVariable";
+
+        private const string Category = "UnintentionalUsage";
 
         // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Localizing%20Analyzers.md for more on localization
         public static readonly LocalizableString UnawaitedTaskTitle = new LocalizableResourceString( nameof( Resources.UnawaitedTaskRuleTitle ), Resources.ResourceManager, typeof( Resources ) );
-        public static readonly LocalizableString PossibleUnawaitedVariableTitle = new LocalizableResourceString( nameof( Resources.PossibleUnawaitedVaraibleRuleTitle ), Resources.ResourceManager, typeof( Resources ) );
         public static readonly LocalizableString UnawaitedTaskMessageFormat = new LocalizableResourceString( nameof( Resources.UnawaitedTaskMessageFormat ), Resources.ResourceManager, typeof( Resources ) );
         public static readonly LocalizableString UnawaitedTaskDescription = new LocalizableResourceString( nameof( Resources.UnawaitedTaskDescription ), Resources.ResourceManager, typeof( Resources ) );
 
+        public static readonly LocalizableString PossibleUnawaitedVariableTitle = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVaraibleRuleTitle), Resources.ResourceManager, typeof(Resources));
         public static readonly LocalizableString PossibleUnawaitedVariableMessageFormat = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableMessageFormat), Resources.ResourceManager, typeof(Resources));
         public static readonly LocalizableString PossibleUnawaitedVariableDescription = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableDescription), Resources.ResourceManager, typeof(Resources));
-        private const string Category = "UnintentionalUsage";
+        
+        public static readonly LocalizableString UnawaitedAnonymousFunctionTitle = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVaraibleRuleTitle), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString UnawaitedAnonymousFunctionFormat = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableMessageFormat), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString UnawaitedAnonymousFunctionDescription = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableDescription), Resources.ResourceManager, typeof(Resources));
+
+        public static readonly LocalizableString UnawaitedLambdaFunctionTitle = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVaraibleRuleTitle), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString UnawaitedLambdaFunctionFormat = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableMessageFormat), Resources.ResourceManager, typeof(Resources));
+        public static readonly LocalizableString UnawaitedLambdaFunctionDescription = new LocalizableResourceString(nameof(Resources.PossibleUnawaitedVariableDescription), Resources.ResourceManager, typeof(Resources));
+
 
         private static readonly DiagnosticDescriptor UnawaitedTaskRule = new DiagnosticDescriptor( UnawaitedTaskRuleId, UnawaitedTaskTitle, UnawaitedTaskMessageFormat, Category, DiagnosticSeverity.Warning, true, UnawaitedTaskDescription );
         private static readonly DiagnosticDescriptor PossibleUnawaitedVariableRule = new DiagnosticDescriptor( PossibleUnawaitedTaskVariableRuleId, PossibleUnawaitedVariableTitle, PossibleUnawaitedVariableMessageFormat, Category, DiagnosticSeverity.Hidden, false, PossibleUnawaitedVariableDescription );
+        private static readonly DiagnosticDescriptor UnawaitedAnonymousFunctionRule = new DiagnosticDescriptor(PossibleUnawaitedTaskVariableRuleId, PossibleUnawaitedVariableTitle, PossibleUnawaitedVariableMessageFormat, Category, DiagnosticSeverity.Hidden, false, PossibleUnawaitedVariableDescription);
+        private static readonly DiagnosticDescriptor UnawaitedLambdaFunctionRule = new DiagnosticDescriptor(PossibleUnawaitedTaskVariableRuleId, PossibleUnawaitedVariableTitle, PossibleUnawaitedVariableMessageFormat, Category, DiagnosticSeverity.Hidden, false, PossibleUnawaitedVariableDescription);
+
+
 
         private static readonly string[] AwaitableTypes = new[]
         {
@@ -60,44 +76,40 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 if ( ( symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault() )
                     is IMethodSymbol methodSymbol )
                 {
-                    AnalyseParentNode( syntaxNodeAnalysisContext, node, methodSymbol );
+                    AnalyseParentNode(new DiagnosticInfo(syntaxNodeAnalysisContext, node, methodSymbol));
                 }
             }
         }
 
-        private static void AnalyseParentNode( SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode node, IMethodSymbol methodSymbol )
+        private static void AnalyseParentNode(DiagnosticInfo info )
         {
-            switch ( node.Parent )
+            switch ( info.Node.Parent )
             {
                 // Checks if a task is not awaited when the task itself is not assigned to a variable.
                 case ExpressionStatementSyntax _:
                     // Check the method return type against all the known awaitable types.
-                    if ( EqualsType( methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes ) )
+                    if ( IsAwaitableType( info.MethodSymbol.ReturnType, info.SyntaxNodeAnalysisContext.SemanticModel) )
                     {
-                        var diagnostic = Diagnostic.Create( UnawaitedTaskRule, node.GetLocation(), methodSymbol.ToDisplayString() );
-
-                        syntaxNodeAnalysisContext.ReportDiagnostic( diagnostic );
+                        ReportDiagnostic(info, UnawaitedTaskRule);
                     }
 
                     break;
 
                 // Checks if a task is not awaited in lambdas.
                 case AnonymousFunctionExpressionSyntax _:
-                    TestIt(syntaxNodeAnalysisContext, node, methodSymbol);
+                    TestAnonymousFunctionExpression(info);
                     break;
                 case ArrowExpressionClauseSyntax _:
-                    TestIt(syntaxNodeAnalysisContext, node, methodSymbol);
+                    TestLambdaFunction(info);
                     break;
                 // Checks if a task is not awaited when the task itself is assigned to a variable.
                 case EqualsValueClauseSyntax _:
-                    TestIt(syntaxNodeAnalysisContext, node, methodSymbol);
+                    TestAssignedVariableIsUnawaitedTask(info);
                     break;
 
                 // If the conditional expression, we check recursively
                 case ConditionalAccessExpressionSyntax _:
-
-                    AnalyseParentNode( syntaxNodeAnalysisContext, node.Parent, methodSymbol );
-
+                    AnalyseParentNode(info.ReplaceNode(info.Node.Parent));
                     break;
 
                 // Awaited expressions don't interest us
@@ -107,37 +119,81 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             }
         }
 
-        private static void TestIt(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode node,
-            IMethodSymbol methodSymbol)
+        private static void TestAnonymousFunctionExpression(DiagnosticInfo info)
         {
-            if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
+            if (IsAwaitableType(info.MethodSymbol.ReturnType, info.SyntaxNodeAnalysisContext.SemanticModel))
             {
-                var diagnostic = Diagnostic.Create(PossibleUnawaitedVariableRule, node.GetLocation(),
-                    methodSymbol.ToDisplayString());
+                
+                if (info.Node.Parent is ParenthesizedLambdaExpressionSyntax { ReturnType: IdentifierNameSyntax back })
+                    return;
 
-                syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+                // If the anonymous function declaration returns a Task then we allow the lampda expression to do the same
+                var possibleMethodParent = info.Node.Parent?.Parent?.Parent?.Parent?.Parent;
+
+                // This could indicate that the anonymous function is a delegate so we check if the underlying delegate returns a task
+                if (possibleMethodParent is LocalDeclarationStatementSyntax lambda)
+                    possibleMethodParent = lambda.Parent?.Parent;
+
+                if (possibleMethodParent is MethodDeclarationSyntax method &&
+                    method.ReturnType is IdentifierNameSyntax returnType)
+                {
+                    if (IsAwaitableType(info.SyntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(returnType).Type,
+                            info.SyntaxNodeAnalysisContext.SemanticModel))
+                        return;
+                }
+
+                ReportDiagnostic(info, PossibleUnawaitedVariableRule);//AnonymousFunctionRule);
             }
         }
 
-        /// <summary>
-        /// Checks if the <paramref name="typeSymbol"/> is one of the types specified
-        /// </summary>
-        /// <param name="typeSymbol"></param>
-        /// <param name="semanticModel">Semantic Model of the current context</param>
-        /// <param name="types">List of parameters that should match the symbol's type</param>
-        /// <returns></returns>
-        private static bool EqualsType( ITypeSymbol typeSymbol, SemanticModel semanticModel, params string[] types )
+        private static void TestLambdaFunction(DiagnosticInfo info)
         {
-            var namedTypeSymbols = types.Select( x => semanticModel.Compilation.GetTypeByMetadataName( x ) );
+            if (IsAwaitableType(info.MethodSymbol.ReturnType, info.SyntaxNodeAnalysisContext.SemanticModel))
+            {
+                // If the local function returns a kind of a Task, then it is ok that the local function also does it
+                if (info.Node.Parent?.Parent is LocalFunctionStatementSyntax function && function.ReturnType is IdentifierNameSyntax returnType)
+                {
+                    if (IsAwaitableType(info.SyntaxNodeAnalysisContext.SemanticModel.GetTypeInfo(returnType).Type,
+                            info.SyntaxNodeAnalysisContext.SemanticModel))
+                        return;
+                }
 
-            var namedSymbol = typeSymbol as INamedTypeSymbol;
-            if ( namedSymbol == null )
+                ReportDiagnostic(info, PossibleUnawaitedVariableRule); //LambdaFunctionRule);
+            }
+        }
+
+        private static void TestAssignedVariableIsUnawaitedTask(DiagnosticInfo info)
+        {
+            if (IsAwaitableType(info.MethodSymbol.ReturnType, info.SyntaxNodeAnalysisContext.SemanticModel))
+            {
+                ReportDiagnostic(info, PossibleUnawaitedVariableRule);
+            }
+        }
+
+        private static void ReportDiagnostic(DiagnosticInfo info, DiagnosticDescriptor rule)
+        {
+            var diagnostic = Diagnostic.Create(rule, info.Node.GetLocation(),
+                info.MethodSymbol.ToDisplayString());
+            info.SyntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
+        }
+
+        /// <summary>
+        /// Checks if the <paramref name="typeSymbol"/> is one of the awaitable types
+        /// </summary>
+        /// <param name="typeSymbol">Type to check</param>
+        /// <param name="semanticModel">Semantic Model of the current context</param>
+        /// <returns></returns>
+        private static bool IsAwaitableType(ITypeSymbol typeSymbol, SemanticModel semanticModel)
+        {
+            var namedTypeSymbols = AwaitableTypes.Select( x => semanticModel.Compilation.GetTypeByMetadataName( x ) );
+
+            if ( !(typeSymbol is INamedTypeSymbol namedSymbol) )
                 return false;
 
             if ( namedSymbol.IsGenericType )
                 return namedTypeSymbols.Any( t => namedSymbol.ConstructedFrom.Equals( t ) );
 
-            return namedTypeSymbols.Any( t => typeSymbol.Equals( t ) );
+            return namedTypeSymbols.Any( typeSymbol.Equals );
         }
     }
 }
