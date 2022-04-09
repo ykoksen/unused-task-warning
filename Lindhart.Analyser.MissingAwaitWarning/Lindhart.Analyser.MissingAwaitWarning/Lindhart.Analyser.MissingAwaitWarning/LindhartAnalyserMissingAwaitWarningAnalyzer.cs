@@ -78,8 +78,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                     break;
 
                 // Checks if a task is not awaited in lambdas.
-                case AnonymousFunctionExpressionSyntax _:
-                case ArrowExpressionClauseSyntax _:
+                // The following two lines have been commented out, since they gave problems
+                // case AnonymousFunctionExpressionSyntax _:
+                // case ArrowExpressionClauseSyntax _:
                 // Checks if a task is not awaited when the task itself is assigned to a variable.
                 case EqualsValueClauseSyntax _:
 

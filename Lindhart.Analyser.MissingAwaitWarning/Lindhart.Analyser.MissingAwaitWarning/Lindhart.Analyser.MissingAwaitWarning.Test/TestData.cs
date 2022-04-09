@@ -90,6 +90,43 @@ namespace AsyncAwaitGames
 }";
 
         /// <summary>
+        /// This should give no warnings
+        /// </summary>
+        public const string TestLocalFunctions = @"
+using System;
+using System.Threading.Tasks;
+
+namespace AsyncAwaitGames
+    {
+        public interface ICallee { Task<int> DoSomethingAsync(); }
+
+        public class Callee : ICallee
+        {
+            public async Task<int> DoSomethingAsync() => await Task.FromResult(0);
+        }
+
+        public class Caller
+        {
+            public async Task DoCall()
+            {
+                ICallee xxx = new Callee();
+                
+                // Functions that should not give warning
+                DoSomething(() => xxx.DoSomethingAsync());
+                Func<Func<Task>> func = () => () => xxx.DoSomethingAsync();
+            }
+
+            public void DoSomething(Func<Task> action){}
+
+            public Task TestThis(ICallee test) => test.DoSomethingAsync());
+        }
+        public class CallerHolder
+        {
+            public ICallee Callee { get; set; }
+        }
+    }";
+
+        /// <summary>
         /// File for testing diagnosis
         /// </summary>
         public const string TestDiagnosisValueTask = @"
