@@ -1,3 +1,4 @@
+using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -24,6 +25,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
             VerifyCSharpDiagnostic(TestData.TestLocalFunctions);
         }
 
+        private const string GenericMissingAwaitVariableMessage = "The method '{0}' returns a Task that was inserted into a variable. This variable might not be awaited.";
+        private const string GenericMissingAwaitMessage = "The method '{0}' returns a Task that was not awaited";
+
         //Diagnostic and CodeFix both triggered and checked for
         [TestMethod]
         public void VerifyCode_ProblematicCode_ExpectWarningForProblem()
@@ -34,8 +38,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -45,8 +50,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -56,8 +62,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 //new DiagnosticResult
                                 //{
-                                //        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                //        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                //        Id = MissingAwaitWarningId,
+                                //        Message = MissingAwaitWarningMessage,
                                 //        Severity = DiagnosticSeverity.Warning,
                                 //        Locations =
                                 //                new[]
@@ -67,8 +73,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 //},
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -78,8 +85,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 //new DiagnosticResult
                                 //{
-                                //        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                //        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                //        Id = MissingAwaitWarningId,
+                                //        Message = MissingAwaitWarningMessage,
                                 //        Severity = DiagnosticSeverity.Warning,
                                 //        Locations =
                                 //                new[]
@@ -89,8 +96,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 //},
                                 //new DiagnosticResult
                                 //{
-                                //        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                //        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                //        Id = MissingAwaitWarningId,
+                                //        Message = MissingAwaitWarningMessage,
                                 //        Severity = DiagnosticSeverity.Warning,
                                 //        Locations =
                                 //                new[]
@@ -100,8 +107,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 //},
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -111,8 +119,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 //new DiagnosticResult
                                 //{
-                                //        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                //        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                //        Id = MissingAwaitWarningId,
+                                //        Message = MissingAwaitWarningMessage,
                                 //        Severity = DiagnosticSeverity.Warning,
                                 //        Locations =
                                 //                new[]
@@ -123,8 +131,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Normal rule
                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -134,8 +142,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'System.Threading.Tasks.Task<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "System.Threading.Tasks.Task<int>.ConfigureAwait(bool)"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -145,8 +153,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -156,8 +164,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -167,8 +175,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -178,8 +186,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -190,8 +198,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -201,8 +210,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'System.Threading.Tasks.Task<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "System.Threading.Tasks.Task<int>.ConfigureAwait(bool)"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -213,8 +222,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
 
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -224,8 +233,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -236,8 +245,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -248,8 +258,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new []
@@ -259,8 +270,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'System.Threading.Tasks.Task<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "System.Threading.Tasks.Task<int>.ConfigureAwait(bool)"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -270,8 +281,8 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                                 new DiagnosticResult
                                 {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'System.Threading.Tasks.Task<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                                        Message = string.Format(GenericMissingAwaitMessage, "System.Threading.Tasks.Task<int>.ConfigureAwait(bool)"),
                                         Severity = DiagnosticSeverity.Warning,
                                         Locations =
                                                 new[]
@@ -291,8 +302,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
             {
                 new DiagnosticResult
                 {
-                        Id = "LindhartAnalyserMissingAwaitWarning",
-                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                        Message = string.Format(GenericMissingAwaitMessage,
+                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                         Severity = DiagnosticSeverity.Warning,
                         Locations =
                                 new[]
@@ -303,8 +315,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                 {
-                        Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                        Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                        Message = string.Format(GenericMissingAwaitVariableMessage,
+                            "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                         Severity = DiagnosticSeverity.Warning,
                         Locations =
                                 new []
@@ -314,8 +327,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 },
                 new DiagnosticResult
                 {
-                        Id = "LindhartAnalyserMissingAwaitWarning",
-                        Message = "The method 'System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                        Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                        Message = string.Format(GenericMissingAwaitMessage,
+                            "System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)"),
                         Severity = DiagnosticSeverity.Warning,
                         Locations =
                                 new[]
@@ -326,8 +340,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
 
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarning",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                    Message = string.Format(GenericMissingAwaitMessage,
+                        "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new[]
@@ -338,8 +353,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                    Message = string.Format(GenericMissingAwaitVariableMessage,
+                        "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new []
@@ -349,8 +365,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 },
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarning",
-                    Message = "The method 'System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                    Message = string.Format(GenericMissingAwaitMessage,
+                        "System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new[]
@@ -361,8 +378,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
 
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarning",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                    Message = string.Format(GenericMissingAwaitMessage,
+                        "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new[]
@@ -372,8 +390,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 },
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarning",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                    Message = string.Format(GenericMissingAwaitMessage,
+                        "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new[]
@@ -384,8 +403,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                    Message = string.Format(GenericMissingAwaitVariableMessage,
+                        "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new []
@@ -396,8 +416,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 // Strict rule
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarningStrict",
-                    Message = "The method 'AsyncAwaitGames.ICallee.DoSomethingAsync()' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.PossibleUnawaitedTaskVariableRuleId,
+                    Message = string.Format(GenericMissingAwaitVariableMessage,
+                        "AsyncAwaitGames.ICallee.DoSomethingAsync()"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new []
@@ -407,8 +428,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 },
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarning",
-                    Message = "The method 'System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                    Message = string.Format(GenericMissingAwaitMessage,
+                        "System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new[]
@@ -418,8 +440,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 },
                 new DiagnosticResult
                 {
-                    Id = "LindhartAnalyserMissingAwaitWarning",
-                    Message = "The method 'System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)' returns a Task that was not awaited",
+                    Id = LindhartAnalyserMissingAwaitWarningAnalyzer.UnawaitedTaskRuleId,
+                    Message = string.Format(GenericMissingAwaitMessage,
+                        "System.Threading.Tasks.ValueTask<int>.ConfigureAwait(bool)"),
                     Severity = DiagnosticSeverity.Warning,
                     Locations =
                         new[]
