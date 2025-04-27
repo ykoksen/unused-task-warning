@@ -48,3 +48,7 @@ Available from NuGet here: https://www.nuget.org/packages/Lindhart.Analyser.Miss
 Available from Visual Studio marketplace here: https://marketplace.visualstudio.com/items?itemName=Lindhart.missingAwaitWarning#overview
 
 For information on how to use analyzers check here: https://docs.microsoft.com/en-us/visualstudio/code-quality/roslyn-analyzers-overview?view=vs-2019
+
+## Changelog
+
+3.1.0 Begun writing changelog. Including symbols and source in package. 
