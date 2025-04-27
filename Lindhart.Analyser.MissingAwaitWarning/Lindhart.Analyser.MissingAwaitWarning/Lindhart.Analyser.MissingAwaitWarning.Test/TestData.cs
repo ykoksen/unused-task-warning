@@ -265,5 +265,24 @@ namespace AsyncAwaitGames
         }
     }
 }";
+
+        public const string TestDelegateReturningTask = @"
+using System;
+using System.IO;
+using System.Threading.Tasks;
+
+namespace ClassLibrary1
+{
+    internal class TestDelegateAsyncWarning
+    {
+        public Task Write(Func<Stream, Task> write)
+        {
+            var stream = new MemoryStream();
+            write(stream); // <-- here, a missing await
+            stream.FlushAsync();
+            return Task.CompletedTask;
+        }
+    }
+}";
     }
 }

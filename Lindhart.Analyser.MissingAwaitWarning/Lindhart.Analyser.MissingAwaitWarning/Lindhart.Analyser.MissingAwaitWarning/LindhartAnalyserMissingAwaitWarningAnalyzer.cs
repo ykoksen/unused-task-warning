@@ -32,9 +32,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(Task<>).FullName,
             typeof(ConfiguredTaskAwaitable).FullName,
             typeof(ConfiguredTaskAwaitable<>).FullName,
-            "System.Threading.Tasks.ValueTask", // Type not available in .net standard 1.3
+            typeof(System.Threading.Tasks.ValueTask).FullName,
             typeof(ValueTask<>).FullName,
-            "System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable", // Type not available in .net standard
+            typeof(System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable).FullName, 
             typeof(ConfiguredValueTaskAwaitable<>).FullName
         };
 

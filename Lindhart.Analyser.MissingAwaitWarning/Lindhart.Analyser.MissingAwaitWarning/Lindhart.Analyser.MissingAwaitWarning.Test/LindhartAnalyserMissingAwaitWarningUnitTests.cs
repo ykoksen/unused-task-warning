@@ -433,6 +433,29 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
         }
 
         [TestMethod]
+        public void ValidateErrorForDelegateProblem()
+        {
+            DiagnosticResult[] expected = [
+            
+                // Commented out those relating to lambda functions since they did fail when they should not
+                // Strict rule
+                new DiagnosticResult
+                                {
+                                        Id = "LindhartAnalyserMissingAwaitWarning",
+                                        Message = "The method 'System.IO.Stream.FlushAsync()' returns a Task that was not awaited",
+                                        Severity = DiagnosticSeverity.Warning,
+                                        Locations =
+                                                new []
+                                                {
+                                                        new DiagnosticResultLocation("Test0.cs", 14, 13),
+                                                }
+                                }
+            ];
+
+            VerifyCSharpDiagnostic(TestData.TestDelegateReturningTask, expected);
+        }
+
+        [TestMethod]
         public void VerifyCodeFix_CodeFixApplied_CodeIsFixed()
         {
             VerifyCSharpFix( TestData.FixTestInput, TestData.FixTestOutput, allowNewCompilerDiagnostics: true );
