@@ -447,6 +447,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                         Locations =
                                                 new []
                                                 {
+                                                        new DiagnosticResultLocation("Test0.cs", 13, 13),
                                                         new DiagnosticResultLocation("Test0.cs", 14, 13),
                                                 }
                                 }
