@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.181
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lindhart.Analyser.MissingAwaitWarning", "Lindhart.Analyser.MissingAwaitWarning\Lindhart.Analyser.MissingAwaitWarning\Lindhart.Analyser.MissingAwaitWarning.csproj", "{693F69C1-D89E-4CB6-9C1A-F4926E5ADE74}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lindhart.Analyser.MissingAwaitWarning.Test", "Lindhart.Analyser.MissingAwaitWarning\Lindhart.Analyser.MissingAwaitWarning.Test\Lindhart.Analyser.MissingAwaitWarning.Test.csproj", "{9F091191-604B-4212-AD9A-D08B8CFA107A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindhart.Analyser.MissingAwaitWarning.Vsix", "Lindhart.Analyser.MissingAwaitWarning\Lindhart.Analyser.MissingAwaitWarning.Vsix\Lindhart.Analyser.MissingAwaitWarning.Vsix.csproj", "{479432C8-F135-4C2D-B250-CBA41CB8F40B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{25EA164F-9FCA-4278-A96B-97309FF3259D}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\dotnet-core.yml = ..\.github\workflows\dotnet-core.yml
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
