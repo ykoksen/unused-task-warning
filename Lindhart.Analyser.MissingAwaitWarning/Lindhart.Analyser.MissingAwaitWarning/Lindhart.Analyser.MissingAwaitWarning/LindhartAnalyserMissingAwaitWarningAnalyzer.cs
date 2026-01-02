@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lindhart.Analyser.MissingAwaitWarning
 {
-    [DiagnosticAnalyzer( LanguageNames.CSharp )]
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class LindhartAnalyserMissingAwaitWarningAnalyzer : DiagnosticAnalyzer
     {
         public const string UnawaitedTaskRuleId = "LindhartAnalyserMissingAwaitWarning";
@@ -43,39 +43,41 @@ namespace Lindhart.Analyser.MissingAwaitWarning
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(UnawaitedTaskRule, PossibleUnawaitedVariableRule);
 
-        public override void Initialize( AnalysisContext context )
+        public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction( AnalyseSymbolNode, SyntaxKind.InvocationExpression );
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+
+            context.RegisterSyntaxNodeAction(AnalyseSymbolNode, SyntaxKind.InvocationExpression);
         }
 
-        private void AnalyseSymbolNode( SyntaxNodeAnalysisContext syntaxNodeAnalysisContext )
+        private void AnalyseSymbolNode(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if ( syntaxNodeAnalysisContext.Node is InvocationExpressionSyntax node )
+            if (syntaxNodeAnalysisContext.Node is InvocationExpressionSyntax node)
             {
                 var symbolInfo = syntaxNodeAnalysisContext
                     .SemanticModel
-                    .GetSymbolInfo( node.Expression, syntaxNodeAnalysisContext.CancellationToken );
+                    .GetSymbolInfo(node.Expression, syntaxNodeAnalysisContext.CancellationToken);
 
-                if ( ( symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault() )
-                    is IMethodSymbol methodSymbol )
+                if ((symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault())
+                    is IMethodSymbol methodSymbol)
                 {
-                    AnalyseParentNode( syntaxNodeAnalysisContext, node, methodSymbol );
+                    AnalyseParentNode(syntaxNodeAnalysisContext, node, methodSymbol);
                 }
             }
         }
 
-        private static void AnalyseParentNode( SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode node, IMethodSymbol methodSymbol )
+        private static void AnalyseParentNode(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext, SyntaxNode node, IMethodSymbol methodSymbol)
         {
-            switch ( node.Parent )
+            switch (node.Parent)
             {
                 // Checks if a task is not awaited when the task itself is not assigned to a variable.
                 case ExpressionStatementSyntax _:
                     // Check the method return type against all the known awaitable types.
-                    if ( EqualsType( methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes ) )
+                    if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                     {
                         var diagnostic = Diagnostic.Create(UnawaitedTaskRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
-                        syntaxNodeAnalysisContext.ReportDiagnostic( diagnostic );
+                        syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
                     }
 
                     break;
@@ -87,11 +89,11 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 // Checks if a task is not awaited when the task itself is assigned to a variable.
                 case EqualsValueClauseSyntax _:
 
-                    if ( EqualsType( methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes ) )
+                    if (EqualsType(methodSymbol.ReturnType, syntaxNodeAnalysisContext.SemanticModel, AwaitableTypes))
                     {
-                        var diagnostic = Diagnostic.Create( PossibleUnawaitedVariableRule, node.GetLocation(), methodSymbol.ToDisplayString() );
+                        var diagnostic = Diagnostic.Create(PossibleUnawaitedVariableRule, node.GetLocation(), methodSymbol.ToDisplayString());
 
-                        syntaxNodeAnalysisContext.ReportDiagnostic( diagnostic );
+                        syntaxNodeAnalysisContext.ReportDiagnostic(diagnostic);
                     }
 
                     break;
@@ -99,7 +101,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning
                 // If the conditional expression, we check recursively
                 case ConditionalAccessExpressionSyntax _:
 
-                    AnalyseParentNode( syntaxNodeAnalysisContext, node.Parent, methodSymbol );
+                    AnalyseParentNode(syntaxNodeAnalysisContext, node.Parent, methodSymbol);
 
                     break;
 
@@ -117,18 +119,18 @@ namespace Lindhart.Analyser.MissingAwaitWarning
         /// <param name="semanticModel">Semantic Model of the current context</param>
         /// <param name="types">List of parameters that should match the symbol's type</param>
         /// <returns></returns>
-        private static bool EqualsType( ITypeSymbol typeSymbol, SemanticModel semanticModel, params string[] types )
+        private static bool EqualsType(ITypeSymbol typeSymbol, SemanticModel semanticModel, params string[] types)
         {
-            var namedTypeSymbols = types.Select( x => semanticModel.Compilation.GetTypeByMetadataName( x ) );
+            var namedTypeSymbols = types.Select(x => semanticModel.Compilation.GetTypeByMetadataName(x));
 
             var namedSymbol = typeSymbol as INamedTypeSymbol;
-            if ( namedSymbol == null )
+            if (namedSymbol == null)
                 return false;
 
-            if ( namedSymbol.IsGenericType )
-                return namedTypeSymbols.Any( t => namedSymbol.ConstructedFrom.Equals( t ) );
+            if (namedSymbol.IsGenericType)
+                return namedTypeSymbols.Any(t => namedSymbol.ConstructedFrom.Equals(t));
 
-            return namedTypeSymbols.Any( t => typeSymbol.Equals( t ) );
+            return namedTypeSymbols.Any(t => typeSymbol.Equals(t));
         }
     }
 }
