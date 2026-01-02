@@ -26,6 +26,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
    
   <ItemGroup>
