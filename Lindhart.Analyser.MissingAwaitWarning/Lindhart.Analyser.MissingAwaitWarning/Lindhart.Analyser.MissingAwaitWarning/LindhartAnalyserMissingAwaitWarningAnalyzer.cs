@@ -2,9 +2,11 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lindhart.Analyser.MissingAwaitWarning
@@ -35,9 +37,9 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             typeof(Task<>).FullName,
             typeof(ConfiguredTaskAwaitable).FullName,
             typeof(ConfiguredTaskAwaitable<>).FullName,
-            "System.Threading.Tasks.ValueTask", // Type not available in .net standard 1.3
+            typeof(System.Threading.Tasks.ValueTask).FullName,
             typeof(ValueTask<>).FullName,
-            "System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable", // Type not available in .net standard
+            typeof(System.Runtime.CompilerServices.ConfiguredValueTaskAwaitable).FullName, 
             typeof(ConfiguredValueTaskAwaitable<>).FullName
         };
 
@@ -56,13 +58,13 @@ namespace Lindhart.Analyser.MissingAwaitWarning
             {
                 var symbolInfo = syntaxNodeAnalysisContext
                     .SemanticModel
-                    .GetSymbolInfo(node.Expression, syntaxNodeAnalysisContext.CancellationToken);
+                    .GetSymbolInfo(node, syntaxNodeAnalysisContext.CancellationToken);
 
                 if ((symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault())
                     is IMethodSymbol methodSymbol)
                 {
                     AnalyseParentNode(syntaxNodeAnalysisContext, node, methodSymbol);
-                }
+                }                
             }
         }
 

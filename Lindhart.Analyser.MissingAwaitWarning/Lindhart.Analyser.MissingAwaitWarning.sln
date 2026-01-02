@@ -10,9 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lindhart.Analyser.MissingAwaitWarning.Vsix", "Lindhart.Analyser.MissingAwaitWarning\Lindhart.Analyser.MissingAwaitWarning.Vsix\Lindhart.Analyser.MissingAwaitWarning.Vsix.csproj", "{479432C8-F135-4C2D-B250-CBA41CB8F40B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{25EA164F-9FCA-4278-A96B-97309FF3259D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8194A40B-2316-46CB-A3D4-6D821C0642C1}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\dotnet-core.yml = ..\.github\workflows\dotnet-core.yml
-		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Global
