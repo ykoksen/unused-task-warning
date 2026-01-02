@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using Lindhart.Analyser.MissingAwaitWarning.Test.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -16,7 +18,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
         {
             string test2 = @"";
 
-            VerifyCSharpDiagnostic( test2 );
+            VerifyCSharpDiagnostic(test2);
         }
 
         [TestMethod]
@@ -36,7 +38,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
 
         //Diagnostic and CodeFix both triggered and checked for
         [TestMethod]
-        public void VerifyCode_ProblematicCode_ExpectWarningForProblem()
+        public async Task VerifyCode_ProblematicCode_ExpectWarningForProblemAsync()
         {
             var expected = new[]
             {
@@ -298,7 +300,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                                 },
                         };
 
-            VerifyCSharpDiagnostic( TestData.TestDiagnosis, expected );
+            VerifyCSharpDiagnostic(await EmbeddedFilesLoader.LoadFile("TestDiagnosis"), expected);
         }
 
         [TestMethod]
@@ -458,28 +460,34 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
                 },
                         };
 
-            VerifyCSharpDiagnostic( TestData.TestDiagnosisValueTask, expected );
+            VerifyCSharpDiagnostic(TestData.TestDiagnosisValueTask, expected);
         }
 
         [TestMethod]
         public void ValidateErrorForDelegateProblem()
         {
             DiagnosticResult[] expected = [
-            
-                // Commented out those relating to lambda functions since they did fail when they should not
-                // Strict rule
+
                 new DiagnosticResult
-                                {
-                                        Id = "LindhartAnalyserMissingAwaitWarning",
-                                        Message = "The method 'System.IO.Stream.FlushAsync()' returns a Task that was not awaited",
-                                        Severity = DiagnosticSeverity.Warning,
-                                        Locations =
-                                                new []
-                                                {
-                                                        new DiagnosticResultLocation("Test0.cs", 13, 13),
-                                                        new DiagnosticResultLocation("Test0.cs", 14, 13),
-                                                }
-                                }
+                {
+                        Id = "LindhartAnalyserMissingAwaitWarning",
+                        Message = "The method 'System.Func<System.IO.Stream, System.Threading.Tasks.Task>.Invoke(System.IO.Stream)' returns a Task that was not awaited",
+                        Severity = DiagnosticSeverity.Warning,
+                        Locations =
+                                [
+                                        new DiagnosticResultLocation("Test0.cs", 13, 13),
+                                ]
+                },
+                new DiagnosticResult
+                {
+                        Id = "LindhartAnalyserMissingAwaitWarning",
+                        Message = "The method 'System.IO.Stream.FlushAsync()' returns a Task that was not awaited",
+                        Severity = DiagnosticSeverity.Warning,
+                        Locations =
+                                [
+                                        new DiagnosticResultLocation("Test0.cs", 14, 13),
+                                ]
+                },
             ];
 
             VerifyCSharpDiagnostic(TestData.TestDelegateReturningTask, expected);
@@ -488,7 +496,7 @@ namespace Lindhart.Analyser.MissingAwaitWarning.Test
         [TestMethod]
         public void VerifyCodeFix_CodeFixApplied_CodeIsFixed()
         {
-            VerifyCSharpFix( TestData.FixTestInput, TestData.FixTestOutput, allowNewCompilerDiagnostics: true );
+            VerifyCSharpFix(TestData.FixTestInput, TestData.FixTestOutput, allowNewCompilerDiagnostics: true);
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
