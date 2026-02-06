@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=ykoksen&project=unused-task-warning&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 # unused-task-warning
 When using dependency injection and async-await pattern it is possible to end up with an interface with a method that returns a Task. If this interface method is used in a synchronous method there is a likelihood that it will erroneously be run as a fire and forget method (which will not trigger inbuilt warning CS4014). In this situation this analyser generates a warning.
 
